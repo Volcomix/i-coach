@@ -1,25 +1,16 @@
-import Button from '@material-ui/core/Button'
-import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
+import SaveIcon from '@material-ui/icons/Save'
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import Form from '../components/Form'
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    alignSelf: 'flex-end',
-  },
-}))
-
 export default function CreateInterval() {
-  const classes = useStyles()
+  let history = useHistory()
 
   return (
-    <Form>
+    <Form submitIcon={<SaveIcon />} onSubmit={() => history.goBack()}>
       <TextField label="Name" />
       <TextField label="Description" />
-      <Button className={classes.button} variant="contained" color="primary">
-        Save
-      </Button>
     </Form>
   )
 }
