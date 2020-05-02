@@ -5,5 +5,8 @@ export default createMuiTheme({
     MuiTextField: {
       variant: 'outlined',
     },
+    MuiFab: {
+      color: 'primary',
+    },
   },
 })
