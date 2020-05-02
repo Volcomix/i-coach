@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "I, Coach",
+  "name": "Timer application with customization capabilities",
   "icons": [
     {
       "src": "favicon.ico",

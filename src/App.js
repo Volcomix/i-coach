@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Container from '@material-ui/core/Container'
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import CreateInterval from './containers/CreateInterval'
+import Intervals from './containers/Intervals'
+import Training from './containers/Training'
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Container maxWidth="sm">
+        <Switch>
+          <Route exact path="/">
+            <Training />
+          </Route>
+          <Route exact path="/intervals">
+            <Intervals />
+          </Route>
+          <Route path="/intervals/create">
+            <CreateInterval />
+          </Route>
+        </Switch>
+      </Container>
+    </Router>
+  )
 }
-
-export default App;
