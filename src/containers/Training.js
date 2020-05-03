@@ -3,7 +3,7 @@ import AddIcon from '@material-ui/icons/Add'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import Form from '../components/Form'
-import Interval from '../components/Interval'
+import Interval from './Interval'
 
 export default function Training(props) {
   return (
@@ -12,7 +12,12 @@ export default function Training(props) {
         const interval = props.intervals.byId[intervalId]
         const exercise = props.exercises.byId[interval.exerciseId]
         return (
-          <Interval key={interval.id} interval={interval} exercise={exercise} />
+          <Interval
+            key={interval.id}
+            interval={interval}
+            exercise={exercise}
+            exercises={props.exercises}
+          />
         )
       })}
       <Fab component={RouterLink} to="/exercises/create">

@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import React, { useContext } from 'react'
-import icons from '../icons'
+import SelectExercise from '../components/SelectExercise'
 import { IntervalsDispatch } from '../reducers'
 
 const useStyles = makeStyles(() => ({
@@ -23,7 +23,16 @@ export default function Interval(props) {
 
   return (
     <div className={classes.root}>
-      <IconButton>{icons[props.exercise.icon]}</IconButton>
+      <SelectExercise
+        exercises={props.exercises}
+        selectedExercise={props.exercise}
+        onChange={(_event, exercise) =>
+          dispatch({
+            type: 'update',
+            item: { ...props.interval, exerciseId: exercise.id },
+          })
+        }
+      />
       <TextField
         label={props.exercise.name}
         type="number"
