@@ -1,11 +1,10 @@
-import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
 import React, { useContext } from 'react'
 import SelectExercise from '../components/SelectExercise'
 import { IntervalsDispatch } from '../reducers'
+import IntervalMenu from './IntervalMenu'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -48,9 +47,7 @@ export default function Interval(props) {
           endAdornment: <InputAdornment position="end">sec</InputAdornment>,
         }}
       />
-      <IconButton>
-        <MoreVertIcon />
-      </IconButton>
+      <IntervalMenu interval={props.interval} />
     </div>
   )
 }

@@ -26,8 +26,8 @@ export default function App() {
   const [intervals, intervalsDispatch] = useReducer(itemsReducer, {
     byId: {
       0: { id: 0, exerciseId: 0, time: 10 },
-      1: { id: 1, exerciseId: 1, time: 30 },
-      2: { id: 2, exerciseId: 2, time: 10 },
+      1: { id: 1, exerciseId: 2, time: 30 },
+      2: { id: 2, exerciseId: 1, time: 10 },
     },
     ids: [0, 1, 2],
     nextId: 3,
@@ -35,8 +35,8 @@ export default function App() {
   const [exercises, exercisesDispatch] = useReducer(itemsReducer, {
     byId: {
       0: { id: 0, icon: 'prepare', name: 'Prepare' },
-      1: { id: 1, icon: 'work', name: 'Work' },
-      2: { id: 2, icon: 'break', name: 'Break' },
+      1: { id: 1, icon: 'break', name: 'Break' },
+      2: { id: 2, icon: 'work', name: 'Work' },
     },
     ids: [0, 1, 2],
     nextId: 3,
