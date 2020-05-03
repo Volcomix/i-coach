@@ -8,6 +8,7 @@ export default function Time(props) {
       label={props.label}
       type="number"
       value={props.value}
+      onChange={props.onChange}
       InputProps={{
         endAdornment: <InputAdornment position="end">sec</InputAdornment>,
       }}

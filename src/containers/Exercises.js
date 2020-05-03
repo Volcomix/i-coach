@@ -44,7 +44,7 @@ const exercises = [
   },
 ]
 
-export default function Intervals() {
+export default function Exercises() {
   return (
     <List>
       {exercises.map(({ name, description }, id) => (
