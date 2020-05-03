@@ -14,7 +14,7 @@ function useCombineDispatch(exercises, exercisesDispatch, intervalsDispatch) {
       case 'add':
         intervalsDispatch({
           type: 'add',
-          item: { exerciseId: exercises.nextId },
+          item: { exerciseId: exercises.nextId, time: '' },
         })
         break
       default:
@@ -34,9 +34,9 @@ export default function App() {
   })
   const [exercises, exercisesDispatch] = useReducer(itemsReducer, {
     byId: {
-      0: { id: 0, name: 'Prepare' },
-      1: { id: 1, name: 'Work' },
-      2: { id: 2, name: 'Break' },
+      0: { id: 0, icon: 'prepare', name: 'Prepare' },
+      1: { id: 1, icon: 'work', name: 'Work' },
+      2: { id: 2, icon: 'break', name: 'Break' },
     },
     ids: [0, 1, 2],
     nextId: 3,
