@@ -23,13 +23,13 @@ export default function IntervalMenu(props) {
     setAnchorEl(null)
   }
 
-  function handleClickAddBefore() {
-    // TODO
-    setAnchorEl(null)
-  }
-
-  function handleClickAddAfter() {
-    // TODO
+  function handleClickAdd(position) {
+    const { id, ...interval } = props.interval
+    dispatch({
+      type: 'add',
+      item: interval,
+      [position]: props.interval,
+    })
     setAnchorEl(null)
   }
 
@@ -44,13 +44,13 @@ export default function IntervalMenu(props) {
         <MoreVertIcon />
       </IconButton>
       <Menu anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
-        <MenuItem onClick={handleClickAddBefore}>
+        <MenuItem onClick={() => handleClickAdd('before')}>
           <ListItemIcon>
             <ArrowUpwardIcon />
           </ListItemIcon>
           <ListItemText primary="Add interval before" />
         </MenuItem>
-        <MenuItem onClick={handleClickAddAfter}>
+        <MenuItem onClick={() => handleClickAdd('after')}>
           <ListItemIcon>
             <ArrowDownwardIcon />
           </ListItemIcon>
