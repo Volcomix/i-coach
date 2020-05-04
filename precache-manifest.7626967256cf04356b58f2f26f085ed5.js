@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7a04e968d11049752f6b7921ee320508",
+    "revision": "59b97e20fa95868cba3126c02f491248",
     "url": "/i-coach/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/i-coach/static/js/2.6fbef380.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "33bddefc4bdd7c84c903",
-    "url": "/i-coach/static/js/main.53f9c66f.chunk.js"
+    "revision": "aaf21588b25def54352e",
+    "url": "/i-coach/static/js/main.55dad3a0.chunk.js"
   },
   {
     "revision": "af627974cb76d6120d0b",
