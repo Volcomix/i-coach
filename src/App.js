@@ -47,7 +47,7 @@ export default function App() {
     intervalsDispatch
   )
   return (
-    <Router>
+    <Router basename="i-coach">
       <Container maxWidth="sm">
         <Switch>
           <Route exact path="/">
