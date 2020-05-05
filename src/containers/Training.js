@@ -1,7 +1,4 @@
-import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
 import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
 import Form from '../components/Form'
 import Interval from './Interval'
 
@@ -20,9 +17,6 @@ export default function Training(props) {
           />
         )
       })}
-      <Fab component={RouterLink} to="/exercises/create">
-        <AddIcon />
-      </Fab>
     </Form>
   )
 }

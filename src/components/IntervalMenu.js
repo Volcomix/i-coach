@@ -7,11 +7,9 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 import DeleteIcon from '@material-ui/icons/Delete'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import React, { useContext, useState } from 'react'
-import { IntervalsDispatch } from '../reducers'
+import React, { useState } from 'react'
 
 export default function IntervalMenu(props) {
-  const dispatch = useContext(IntervalsDispatch)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
@@ -23,18 +21,18 @@ export default function IntervalMenu(props) {
     setAnchorEl(null)
   }
 
-  function handleClickAdd(position) {
-    const { id, ...interval } = props.interval
-    dispatch({
-      type: 'add',
-      item: interval,
-      [position]: props.interval,
-    })
+  function handleAddBeforeClick() {
+    props.onAddBeforeClick()
     setAnchorEl(null)
   }
 
-  function handleClickDelete() {
-    dispatch({ type: 'delete', item: props.interval })
+  function handleAddAfterClick() {
+    props.onAddAfterClick()
+    setAnchorEl(null)
+  }
+
+  function handleDeleteClick() {
+    props.onDeleteClick()
     setAnchorEl(null)
   }
 
@@ -44,19 +42,19 @@ export default function IntervalMenu(props) {
         <MoreVertIcon />
       </IconButton>
       <Menu anchorEl={anchorEl} keepMounted open={open} onClose={handleClose}>
-        <MenuItem onClick={() => handleClickAdd('before')}>
+        <MenuItem onClick={handleAddBeforeClick}>
           <ListItemIcon>
             <ArrowUpwardIcon />
           </ListItemIcon>
           <ListItemText primary="Add interval before" />
         </MenuItem>
-        <MenuItem onClick={() => handleClickAdd('after')}>
+        <MenuItem onClick={handleAddAfterClick}>
           <ListItemIcon>
             <ArrowDownwardIcon />
           </ListItemIcon>
           <ListItemText primary="Add interval after" />
         </MenuItem>
-        <MenuItem onClick={handleClickDelete}>
+        <MenuItem onClick={handleDeleteClick}>
           <ListItemIcon>
             <DeleteIcon />
           </ListItemIcon>

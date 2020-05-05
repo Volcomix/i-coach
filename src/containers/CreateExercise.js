@@ -24,6 +24,18 @@ export default function CreateExercise() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
 
+  function handleIconChange(event) {
+    setIcon(event.target.value)
+  }
+
+  function handleNameChange(event) {
+    setName(event.target.value)
+  }
+
+  function handleDescriptionChange(event) {
+    setDescription(event.target.value)
+  }
+
   function handleSaveClick() {
     dispatch({ type: 'add', item: { icon, name, description } })
     history.goBack()
@@ -36,7 +48,7 @@ export default function CreateExercise() {
         label="Icon"
         className={classes.icon}
         value={icon}
-        onChange={(event) => setIcon(event.target.value)}
+        onChange={handleIconChange}
       >
         {Object.entries(icons).map(([id, icon]) => (
           <MenuItem key={id} value={id}>
@@ -44,15 +56,11 @@ export default function CreateExercise() {
           </MenuItem>
         ))}
       </TextField>
-      <TextField
-        label="Name"
-        value={name}
-        onChange={(event) => setName(event.target.value)}
-      />
+      <TextField label="Name" value={name} onChange={handleNameChange} />
       <TextField
         label="Description"
         value={description}
-        onChange={(event) => setDescription(event.target.value)}
+        onChange={handleDescriptionChange}
       />
       <Fab onClick={handleSaveClick}>
         <SaveIcon />
