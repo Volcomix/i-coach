@@ -3,10 +3,11 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import React, { useContext, useState } from 'react'
-import ExerciseDialog from '../components/ExerciseDialog'
+import CreateExerciseDialog from '../components/CreateExerciseDialog'
 import IntervalMenu from '../components/IntervalMenu'
+import SelectExerciseDialog from '../components/SelectExerciseDialog'
 import icons from '../icons'
-import { IntervalsDispatch } from '../reducers'
+import { ExercisesDispatch, IntervalsDispatch } from '../reducers'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -20,16 +21,26 @@ const useStyles = makeStyles(() => ({
 
 export default function Interval(props) {
   const classes = useStyles()
-  const dispatch = useContext(IntervalsDispatch)
+  const intervalsDispatch = useContext(IntervalsDispatch)
+  const exercisesDispatch = useContext(ExercisesDispatch)
   const [exerciseDialogConfig, setExerciseDialogConfig] = useState(null)
-  const exerciseDialogOpen = Boolean(exerciseDialogConfig)
+  const selectExerciseDialogOpen = Boolean(
+    exerciseDialogConfig && exerciseDialogConfig.type === 'select'
+  )
+  const createExerciseDialogOpen = Boolean(
+    exerciseDialogConfig && exerciseDialogConfig.type === 'create'
+  )
 
   function handleIconClick() {
-    setExerciseDialogConfig({ isNewInterval: false, newIntervalPosition: null })
+    setExerciseDialogConfig({
+      type: 'select',
+      isNewInterval: false,
+      newIntervalPosition: null,
+    })
   }
 
   function handleTimeChange(event) {
-    dispatch({
+    intervalsDispatch({
       type: 'update',
       item: { ...props.interval, time: event.target.value },
     })
@@ -37,6 +48,7 @@ export default function Interval(props) {
 
   function handleAddBeforeClick() {
     setExerciseDialogConfig({
+      type: 'select',
       isNewInterval: true,
       newIntervalPosition: 'before',
     })
@@ -44,34 +56,64 @@ export default function Interval(props) {
 
   function handleAddAfterClick() {
     setExerciseDialogConfig({
+      type: 'select',
       isNewInterval: true,
       newIntervalPosition: 'after',
     })
   }
 
   function handleDeleteClick() {
-    dispatch({ type: 'delete', item: props.interval })
+    intervalsDispatch({ type: 'delete', item: props.interval })
   }
 
-  function handleExerciseDialogClose(exercise) {
+  function handleSelectExerciseDialogClose(exercise) {
+    // TODO add a new handler instead of onClose to avoid 'create' string
+    if (exercise === 'create') {
+      setExerciseDialogConfig({ ...exerciseDialogConfig, type: 'create' })
+      return
+    }
     setExerciseDialogConfig(null)
     if (!exercise) {
       return
     }
+    // TODO factorize duplicated code
     if (exerciseDialogConfig.isNewInterval) {
       const { id, ...interval } = props.interval
       interval.exerciseId = exercise.id
-      dispatch({
+      intervalsDispatch({
         type: 'add',
         item: interval,
         [exerciseDialogConfig.newIntervalPosition]: props.interval,
       })
     } else {
-      dispatch({
+      intervalsDispatch({
         type: 'update',
         item: { ...props.interval, exerciseId: exercise.id },
       })
     }
+  }
+
+  function handleCreateExerciseDialogClose(exercise) {
+    setExerciseDialogConfig(null)
+    if (!exercise) {
+      return
+    }
+    exercisesDispatch({ type: 'add', item: exercise })
+    // if (exerciseDialogConfig.isNewInterval) {
+    //   const { id, ...interval } = props.interval
+    //   // FIXME exercise.id is not defined yet
+    //   interval.exerciseId = exercise.id
+    //   intervalsDispatch({
+    //     type: 'add',
+    //     item: interval,
+    //     [exerciseDialogConfig.newIntervalPosition]: props.interval,
+    //   })
+    // } else {
+    //   intervalsDispatch({
+    //     type: 'update',
+    //     item: { ...props.interval, exerciseId: exercise.id },
+    //   })
+    // }
   }
 
   return (
@@ -96,11 +138,15 @@ export default function Interval(props) {
         onDeleteClick={handleDeleteClick}
       />
 
-      <ExerciseDialog
+      <SelectExerciseDialog
         exercises={props.exercises}
         selectedExercise={props.exercise}
-        open={exerciseDialogOpen}
-        onClose={handleExerciseDialogClose}
+        open={selectExerciseDialogOpen}
+        onClose={handleSelectExerciseDialogClose}
+      />
+      <CreateExerciseDialog
+        open={createExerciseDialogOpen}
+        onClose={handleCreateExerciseDialogClose}
       />
     </div>
   )

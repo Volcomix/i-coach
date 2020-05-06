@@ -18,19 +18,19 @@ const useStyles = makeStyles({
   },
 })
 
-export default function ExerciseDialog(props) {
+export default function SelectExerciseDialog(props) {
   const classes = useStyles()
-
-  function handleClose() {
-    props.onClose()
-  }
 
   function handleListItemClick(value) {
     props.onClose(value)
   }
 
+  function handleClose() {
+    props.onClose()
+  }
+
   return (
-    <Dialog onClose={handleClose} open={props.open}>
+    <Dialog open={props.open} onClose={handleClose}>
       <DialogTitle>Exercise</DialogTitle>
       <List>
         {props.exercises.ids.map((exerciseId) => {
@@ -50,7 +50,11 @@ export default function ExerciseDialog(props) {
             </ListItem>
           )
         })}
-        <ListItem autoFocus button onClick={handleClose}>
+        <ListItem
+          autoFocus
+          button
+          onClick={() => handleListItemClick('create')}
+        >
           <ListItemAvatar>
             <Avatar>
               <AddIcon />

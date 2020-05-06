@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     marginBottom: theme.spacing(2),
-    '& > *': {
+    '& > *, & > .MuiFormControl-root': {
       marginTop: theme.spacing(2),
     },
     '& .MuiFab-root': {
