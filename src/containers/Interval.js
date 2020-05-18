@@ -99,21 +99,20 @@ export default function Interval(props) {
       return
     }
     exercisesDispatch({ type: 'add', item: exercise })
-    // if (exerciseDialogConfig.isNewInterval) {
-    //   const { id, ...interval } = props.interval
-    //   // FIXME exercise.id is not defined yet
-    //   interval.exerciseId = exercise.id
-    //   intervalsDispatch({
-    //     type: 'add',
-    //     item: interval,
-    //     [exerciseDialogConfig.newIntervalPosition]: props.interval,
-    //   })
-    // } else {
-    //   intervalsDispatch({
-    //     type: 'update',
-    //     item: { ...props.interval, exerciseId: exercise.id },
-    //   })
-    // }
+    if (exerciseDialogConfig.isNewInterval) {
+      const { id, ...interval } = props.interval
+      interval.exerciseId = props.exercises.nextId
+      intervalsDispatch({
+        type: 'add',
+        item: interval,
+        [exerciseDialogConfig.newIntervalPosition]: props.interval,
+      })
+    } else {
+      intervalsDispatch({
+        type: 'update',
+        item: { ...props.interval, exerciseId: props.exercises.nextId },
+      })
+    }
   }
 
   return (
