@@ -98,10 +98,13 @@ export default function Interval(props) {
     if (!exercise) {
       return
     }
+    // TODO find a way to dispatch only one action?
+    const exerciseId = props.exercises.nextId
     exercisesDispatch({ type: 'add', item: exercise })
     if (exerciseDialogConfig.isNewInterval) {
+      // TODO avoid to clone an existing interval
       const { id, ...interval } = props.interval
-      interval.exerciseId = props.exercises.nextId
+      interval.exerciseId = exerciseId
       intervalsDispatch({
         type: 'add',
         item: interval,
@@ -110,7 +113,7 @@ export default function Interval(props) {
     } else {
       intervalsDispatch({
         type: 'update',
-        item: { ...props.interval, exerciseId: props.exercises.nextId },
+        item: { ...props.interval, exerciseId },
       })
     }
   }
