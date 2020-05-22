@@ -2,7 +2,7 @@ name: CI
 on: push
 jobs:
   build:
-    name: Build, test and deploy
+    name: Test and deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
