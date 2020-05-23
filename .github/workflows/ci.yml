@@ -15,5 +15,5 @@ jobs:
         run: yarn test
 
       - name: Deploy
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/ci' }}
         run: yarn deploy
