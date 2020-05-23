@@ -2,7 +2,7 @@ name: CI
 on: push
 jobs:
   build:
-    name: Test and deploy
+    name: Build, test and deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,4 +16,6 @@ jobs:
 
       - name: Deploy
         if: ${{ github.ref == 'refs/heads/ci' }}
-        run: yarn deploy -u "Volcomix <Volcomix@users.noreply.github.com>"
+        run: |
+          git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
+          yarn deploy -u "GitHub Actions <github-actions@users.noreply.github.com>"
