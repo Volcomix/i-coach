@@ -15,7 +15,7 @@ jobs:
         run: yarn test
 
       - name: Deploy
-        if: ${{ github.ref == 'refs/heads/ci' }}
+        if: ${{ github.ref == 'refs/heads/master' }}
         run: |
           git remote set-url origin https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}
           yarn deploy -u "GitHub Actions <github-actions@users.noreply.github.com>"
