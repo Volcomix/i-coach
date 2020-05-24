@@ -22,7 +22,7 @@ export type ItemsReducer<T extends Item> = (
   action: ItemsAction<T>
 ) => ItemsState<T>
 
-export default function itemsReducer<T extends Item>(
+export default function reducer<T extends Item>(
   state: ItemsState<T>,
   action: ItemsAction<T>
 ): ItemsState<T> {
