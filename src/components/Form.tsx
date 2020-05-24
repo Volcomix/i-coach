@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function Form(props) {
+export default function Form(props: Props) {
   const classes = useStyles()
 
   return (
@@ -25,4 +25,8 @@ export default function Form(props) {
       {props.children}
     </form>
   )
+}
+
+interface Props {
+  children: ReactNode
 }

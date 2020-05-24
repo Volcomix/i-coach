@@ -8,10 +8,18 @@ import Slide from '@material-ui/core/Slide'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Toolbar from '@material-ui/core/Toolbar'
+import { TransitionProps } from '@material-ui/core/transitions'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
-import React, { useState } from 'react'
+import React, {
+  ChangeEvent,
+  forwardRef,
+  ReactElement,
+  Ref,
+  useState,
+} from 'react'
 import icons from '../icons'
+import { Exercise, ExercisesState } from '../reducers'
 import Form from './Form'
 
 const useStyles = makeStyles((theme) => ({
@@ -28,30 +36,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & { children?: ReactElement },
+  ref: Ref<unknown>
+) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-export default function CreateExerciseDialog(props) {
+export default function CreateExerciseDialog(props: Props) {
   const classes = useStyles()
-  const [icon, setIcon] = useState('')
+  const [icon, setIcon] = useState<keyof typeof icons | ''>('')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
 
-  function handleIconChange(event) {
-    setIcon(event.target.value)
+  function handleIconChange(event: ChangeEvent<HTMLInputElement>) {
+    setIcon(event.target.value as keyof typeof icons)
   }
 
-  function handleNameChange(event) {
+  function handleNameChange(event: ChangeEvent<HTMLInputElement>) {
     setName(event.target.value)
   }
 
-  function handleDescriptionChange(event) {
+  function handleDescriptionChange(event: ChangeEvent<HTMLInputElement>) {
     setDescription(event.target.value)
   }
 
   function handleSaveClick() {
-    props.onClose({ icon, name, description })
+    props.onClose({
+      id: props.exercises.nextId,
+      icon: icon as keyof typeof icons,
+      name,
+      description,
+    })
   }
 
   function handleClose() {
@@ -104,4 +120,10 @@ export default function CreateExerciseDialog(props) {
       </Container>
     </Dialog>
   )
+}
+
+interface Props {
+  open: boolean
+  exercises: ExercisesState
+  onClose: (exercise?: Exercise) => void
 }
