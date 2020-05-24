@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
 import React from 'react'
 import icons from '../icons'
+import { Exercise, ExercisesState } from '../reducers'
 
 const useStyles = makeStyles({
   avatar: {
@@ -18,10 +19,10 @@ const useStyles = makeStyles({
   },
 })
 
-export default function SelectExerciseDialog(props) {
+export default function SelectExerciseDialog(props: Props) {
   const classes = useStyles()
 
-  function handleListItemClick(value) {
+  function handleListItemClick(value: Exercise | 'create') {
     props.onClose(value)
   }
 
@@ -65,4 +66,10 @@ export default function SelectExerciseDialog(props) {
       </List>
     </Dialog>
   )
+}
+
+interface Props {
+  open: boolean
+  exercises: ExercisesState
+  onClose: (exercise?: Exercise | 'create') => void
 }

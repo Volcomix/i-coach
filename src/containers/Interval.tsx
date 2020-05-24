@@ -2,12 +2,20 @@ import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
-import React, { useContext, useState } from 'react'
+import React, { ChangeEvent, useContext, useState } from 'react'
 import CreateExerciseDialog from '../components/CreateExerciseDialog'
 import IntervalMenu from '../components/IntervalMenu'
 import SelectExerciseDialog from '../components/SelectExerciseDialog'
 import icons from '../icons'
-import { ExercisesDispatch, IntervalsDispatch } from '../reducers'
+import {
+  Exercise,
+  ExercisesDispatch,
+  ExercisesState,
+  Interval,
+  IntervalsDispatch,
+  IntervalsState,
+} from '../reducers'
+import { ItemsAction } from '../reducers/items'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -19,17 +27,19 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default function Interval(props) {
+export default function IntervalComponent(props: Props) {
+  const exercise = props.exercises.byId[props.interval.exerciseId]
+
   const classes = useStyles()
   const intervalsDispatch = useContext(IntervalsDispatch)
   const exercisesDispatch = useContext(ExercisesDispatch)
-  const [exerciseDialogConfig, setExerciseDialogConfig] = useState(null)
-  const selectExerciseDialogOpen = Boolean(
-    exerciseDialogConfig && exerciseDialogConfig.type === 'select'
-  )
-  const createExerciseDialogOpen = Boolean(
-    exerciseDialogConfig && exerciseDialogConfig.type === 'create'
-  )
+
+  const [exerciseDialogConfig, setExerciseDialogConfig] = useState<
+    ExerciseDialogConfig
+  >({ type: null, isNewInterval: false, newIntervalPosition: null })
+
+  const selectExerciseDialogOpen = exerciseDialogConfig.type === 'select'
+  const createExerciseDialogOpen = exerciseDialogConfig.type === 'create'
 
   function handleIconClick() {
     setExerciseDialogConfig({
@@ -39,10 +49,10 @@ export default function Interval(props) {
     })
   }
 
-  function handleTimeChange(event) {
+  function handleTimeChange(event: ChangeEvent<HTMLInputElement>) {
     intervalsDispatch({
       type: 'update',
-      item: { ...props.interval, time: event.target.value },
+      item: { ...props.interval, time: Number(event.target.value) },
     })
   }
 
@@ -66,25 +76,31 @@ export default function Interval(props) {
     intervalsDispatch({ type: 'delete', item: props.interval })
   }
 
-  function handleSelectExerciseDialogClose(exercise) {
+  function handleSelectExerciseDialogClose(exercise?: Exercise | 'create') {
     // TODO add a new handler instead of onClose to avoid 'create' string
     if (exercise === 'create') {
       setExerciseDialogConfig({ ...exerciseDialogConfig, type: 'create' })
       return
     }
-    setExerciseDialogConfig(null)
+    setExerciseDialogConfig({ ...exerciseDialogConfig, type: null })
     if (!exercise) {
       return
     }
     // TODO factorize duplicated code
     if (exerciseDialogConfig.isNewInterval) {
-      const { id, ...interval } = props.interval
+      // TODO avoid to clone an existing interval
+      const interval = { ...props.interval }
+      interval.id = props.intervals.nextId
       interval.exerciseId = exercise.id
-      intervalsDispatch({
+
+      const action: ItemsAction<Interval> = {
         type: 'add',
         item: interval,
-        [exerciseDialogConfig.newIntervalPosition]: props.interval,
-      })
+      }
+      if (exerciseDialogConfig.newIntervalPosition) {
+        action[exerciseDialogConfig.newIntervalPosition] = props.interval
+      }
+      intervalsDispatch(action)
     } else {
       intervalsDispatch({
         type: 'update',
@@ -93,8 +109,8 @@ export default function Interval(props) {
     }
   }
 
-  function handleCreateExerciseDialogClose(exercise) {
-    setExerciseDialogConfig(null)
+  function handleCreateExerciseDialogClose(exercise?: Exercise) {
+    setExerciseDialogConfig({ ...exerciseDialogConfig, type: null })
     if (!exercise) {
       return
     }
@@ -103,13 +119,18 @@ export default function Interval(props) {
     exercisesDispatch({ type: 'add', item: exercise })
     if (exerciseDialogConfig.isNewInterval) {
       // TODO avoid to clone an existing interval
-      const { id, ...interval } = props.interval
+      const interval = { ...props.interval }
+      interval.id = props.intervals.nextId
       interval.exerciseId = exerciseId
-      intervalsDispatch({
+
+      const action: ItemsAction<Interval> = {
         type: 'add',
         item: interval,
-        [exerciseDialogConfig.newIntervalPosition]: props.interval,
-      })
+      }
+      if (exerciseDialogConfig.newIntervalPosition) {
+        action[exerciseDialogConfig.newIntervalPosition] = props.interval
+      }
+      intervalsDispatch(action)
     } else {
       intervalsDispatch({
         type: 'update',
@@ -120,11 +141,9 @@ export default function Interval(props) {
 
   return (
     <div className={classes.root}>
-      <IconButton onClick={handleIconClick}>
-        {icons[props.exercise.icon]}
-      </IconButton>
+      <IconButton onClick={handleIconClick}>{icons[exercise.icon]}</IconButton>
       <TextField
-        label={props.exercise.name}
+        label={exercise.name}
         type="number"
         className={classes.time}
         value={props.interval.time}
@@ -134,7 +153,6 @@ export default function Interval(props) {
         }}
       />
       <IntervalMenu
-        interval={props.interval}
         onAddBeforeClick={handleAddBeforeClick}
         onAddAfterClick={handleAddAfterClick}
         onDeleteClick={handleDeleteClick}
@@ -142,14 +160,26 @@ export default function Interval(props) {
 
       <SelectExerciseDialog
         exercises={props.exercises}
-        selectedExercise={props.exercise}
         open={selectExerciseDialogOpen}
         onClose={handleSelectExerciseDialogClose}
       />
       <CreateExerciseDialog
         open={createExerciseDialogOpen}
+        exercises={props.exercises}
         onClose={handleCreateExerciseDialogClose}
       />
     </div>
   )
+}
+
+interface Props {
+  interval: Interval
+  intervals: IntervalsState
+  exercises: ExercisesState
+}
+
+interface ExerciseDialogConfig {
+  type: null | 'select' | 'create'
+  isNewInterval: boolean
+  newIntervalPosition: null | 'before' | 'after'
 }

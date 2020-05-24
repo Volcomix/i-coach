@@ -3,28 +3,41 @@ import React, { useReducer } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Exercises from './containers/Exercises'
 import Training from './containers/Training'
-import { ExercisesDispatch, IntervalsDispatch } from './reducers'
-import itemsReducer from './reducers/items'
+import {
+  Exercise,
+  ExercisesDispatch,
+  Interval,
+  IntervalsDispatch,
+} from './reducers'
+import itemsReducer, { ItemsReducer } from './reducers/items'
 
 export default function App() {
-  const [intervals, intervalsDispatch] = useReducer(itemsReducer, {
-    byId: {
-      0: { id: 0, exerciseId: 0, time: 10 },
-      1: { id: 1, exerciseId: 2, time: 30 },
-      2: { id: 2, exerciseId: 1, time: 10 },
-    },
-    ids: [0, 1, 2],
-    nextId: 3,
-  })
-  const [exercises, exercisesDispatch] = useReducer(itemsReducer, {
-    byId: {
-      0: { id: 0, icon: 'prepare', name: 'Prepare' },
-      1: { id: 1, icon: 'break', name: 'Break' },
-      2: { id: 2, icon: 'work', name: 'Work' },
-    },
-    ids: [0, 1, 2],
-    nextId: 3,
-  })
+  const [intervals, intervalsDispatch] = useReducer<ItemsReducer<Interval>>(
+    itemsReducer,
+    {
+      byId: {
+        0: { id: 0, exerciseId: 0, time: 10 },
+        1: { id: 1, exerciseId: 2, time: 30 },
+        2: { id: 2, exerciseId: 1, time: 10 },
+      },
+      ids: [0, 1, 2],
+      nextId: 3,
+    }
+  )
+
+  const [exercises, exercisesDispatch] = useReducer<ItemsReducer<Exercise>>(
+    itemsReducer,
+    {
+      byId: {
+        0: { id: 0, icon: 'prepare', name: 'Prepare' },
+        1: { id: 1, icon: 'break', name: 'Break' },
+        2: { id: 2, icon: 'work', name: 'Work' },
+      },
+      ids: [0, 1, 2],
+      nextId: 3,
+    }
+  )
+
   return (
     <Router basename="/i-coach">
       <Container maxWidth="sm">
