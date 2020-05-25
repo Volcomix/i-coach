@@ -6,7 +6,6 @@ import Training from './containers/Training'
 import exercises from './exercises'
 import {
   CategoriesState,
-  Category,
   Exercise,
   ExercisesDispatch,
   ExercisesState,
@@ -78,10 +77,11 @@ export default function App() {
     initialExercises
   )
 
-  const [categories, categoriesDispatch] = useReducer<ItemsReducer<Category>>(
-    itemsReducer,
-    initialCategories
-  )
+  // TODO
+  // const [categories, categoriesDispatch] = useReducer<ItemsReducer<Category>>(
+  //   itemsReducer,
+  //   initialCategories
+  // )
 
   return (
     <Router basename="/i-coach">
