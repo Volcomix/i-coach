@@ -1,6 +1,7 @@
 import Container from '@material-ui/core/Container'
 import React, { useReducer } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Home from './components/Home'
 import Exercises from './containers/Exercises'
 import Training from './containers/Training'
 import exercises from './exercises'
@@ -85,9 +86,12 @@ export default function App() {
 
   return (
     <Router basename="/i-coach">
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" disableGutters={true}>
         <Switch>
           <Route exact path="/">
+            <Home />
+          </Route>
+          <Route exact path="/training">
             <IntervalsDispatch.Provider value={intervalsDispatch}>
               <ExercisesDispatch.Provider value={exercisesDispatch}>
                 <Training intervals={intervals} exercises={exercises} />
