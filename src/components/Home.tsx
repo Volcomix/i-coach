@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import TimerIcon from '@material-ui/icons/Timer'
 import React from 'react'
+import exercises from '../exercises'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,31 +36,33 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Home() {
   const classes = useStyles()
 
+  const totalTime = exercises.reduce(
+    (result, exercise) => result + exercise.prepareTime + exercise.workTime,
+    0
+  )
+
   return (
     <React.Fragment>
       <List>
-        <ListItem>
-          <ListItemText primary="Soft Touch Front" />
-          <ListItemSecondaryAction>
-            <Typography variant="body2" color="textSecondary">
-              01:20
-            </Typography>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <ListItem>
-          <ListItemText primary="Soft Touch Side" />
-          <ListItemSecondaryAction>
-            <Typography variant="body2" color="textSecondary">
-              01:20
-            </Typography>
-          </ListItemSecondaryAction>
-        </ListItem>
+        {exercises.map((exercise, index) => {
+          const time = exercise.prepareTime + exercise.workTime
+          return (
+            <ListItem key={index}>
+              <ListItemText primary={exercise.name} />
+              <ListItemSecondaryAction>
+                <Typography variant="body2" color="textSecondary">
+                  {toDuration(time)}
+                </Typography>
+              </ListItemSecondaryAction>
+            </ListItem>
+          )
+        })}
       </List>
       <AppBar position="fixed" color="inherit" className={classes.appBar}>
         <Toolbar className={classes.totalTime}>
           <TimerIcon color="primary" />
           <Typography>Total time</Typography>
-          <Typography>18:40</Typography>
+          <Typography>{toDuration(totalTime)}</Typography>
           <Fab color="primary" className={classes.fabButton}>
             <PlayArrowIcon />
           </Fab>
@@ -67,4 +70,10 @@ export default function Home() {
       </AppBar>
     </React.Fragment>
   )
+}
+
+function toDuration(totalSeconds: number): string {
+  const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0')
+  const seconds = String(totalSeconds % 60).padStart(2, '0')
+  return `${minutes}:${seconds}`
 }

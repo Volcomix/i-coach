@@ -4,7 +4,16 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './components/Home'
 import Exercises from './containers/Exercises'
 import Training from './containers/Training'
-import exercises from './exercises'
+import brokenStick from './exercises/broken-stick'
+import challenges from './exercises/challenges'
+import datsyuk from './exercises/datsyuk'
+import footwork from './exercises/footwork'
+import movesAndFakes from './exercises/moves-and-fakes'
+import pucks from './exercises/pucks'
+import toeDrags from './exercises/toe-drags'
+import twoPucks from './exercises/two-pucks'
+import useYourFeet from './exercises/use-your-feet'
+import warmUp from './exercises/warm-up'
 import {
   CategoriesState,
   Exercise,
@@ -41,6 +50,19 @@ const initialCategories: CategoriesState = {
   ids: [],
   nextId: 0,
 }
+
+const exercises = [
+  warmUp,
+  movesAndFakes,
+  useYourFeet,
+  toeDrags,
+  challenges,
+  brokenStick,
+  footwork,
+  twoPucks,
+  pucks,
+  datsyuk,
+]
 
 for (const category of exercises) {
   const categoryId = initialCategories.nextId

@@ -1,23 +1,45 @@
-import brokenStick from './broken-stick'
-import challenges from './challenges'
-import datsyuk from './datsyuk'
-import footwork from './footwork'
-import movesAndFakes from './moves-and-fakes'
-import pucks from './pucks'
-import toeDrags from './toe-drags'
-import twoPucks from './two-pucks'
-import useYourFeet from './use-your-feet'
-import warmUp from './warm-up'
-
 export default [
-  warmUp,
-  movesAndFakes,
-  useYourFeet,
-  toeDrags,
-  challenges,
-  brokenStick,
-  footwork,
-  twoPucks,
-  pucks,
-  datsyuk,
+  { name: 'Soft Touch Front', prepareTime: 10, workTime: 30 },
+  { name: 'Soft Touch Side', prepareTime: 10, workTime: 30 },
+  { name: 'Soft Touch Backhand', prepareTime: 10, workTime: 30 },
+  { name: 'Soft Touch Around Side', prepareTime: 10, workTime: 30 },
+  { name: 'Soft Touch Around Backhand', prepareTime: 10, workTime: 30 },
+  { name: 'Slide Bottom Hand', prepareTime: 10, workTime: 30 },
+  { name: 'Roll Puck Front', prepareTime: 10, workTime: 30 },
+  { name: 'Roll Puck Side', prepareTime: 10, workTime: 30 },
+  { name: 'Wide Move Front', prepareTime: 10, workTime: 30 },
+  { name: 'Wide Move Side', prepareTime: 10, workTime: 30 },
+  { name: 'Wide Move To Soft Touch', prepareTime: 10, workTime: 30 },
+  { name: 'Forehand Ls', prepareTime: 10, workTime: 30 },
+  { name: 'Backhand Ls', prepareTime: 10, workTime: 30 },
+  { name: 'Soft Touch, Pull To Shoot', prepareTime: 10, workTime: 30 },
+  { name: 'Soft Touch, Pull To Fake To Slide', prepareTime: 10, workTime: 30 },
+  { name: 'Backhand Fake', prepareTime: 10, workTime: 30 },
+  { name: 'Forehand Fake', prepareTime: 10, workTime: 30 },
+  { name: 'Fake Snapshot', prepareTime: 10, workTime: 30 },
+  { name: 'Fake Wristshot', prepareTime: 10, workTime: 30 },
+  { name: 'Pump Fake', prepareTime: 10, workTime: 30 },
+  { name: 'Stick Fake', prepareTime: 10, workTime: 30 },
+  { name: 'Backhand Toe Pull', prepareTime: 10, workTime: 30 },
+  { name: 'Backhand Toe Drag', prepareTime: 10, workTime: 30 },
+  { name: 'Backhand To Forehand Toey', prepareTime: 10, workTime: 30 },
+  { name: '5-Points Toe Drag', prepareTime: 10, workTime: 30 },
+  { name: 'Back To Front Toe Drag', prepareTime: 10, workTime: 30 },
+  { name: 'Toe Drag Front', prepareTime: 10, workTime: 30 },
+  { name: 'Toe Drag Side', prepareTime: 10, workTime: 30 },
+  { name: 'Yo Yo Toe', prepareTime: 10, workTime: 30 },
+  { name: '8 Start Forehand', prepareTime: 20, workTime: 40 },
+  { name: '8 Start Backhand', prepareTime: 20, workTime: 40 },
+  { name: 'Infinity', prepareTime: 20, workTime: 40 },
+  { name: 'Infinity Toe', prepareTime: 20, workTime: 40 },
+  { name: 'Side Datsyuk', prepareTime: 20, workTime: 40 },
+  { name: 'Behind Datsyuk', prepareTime: 20, workTime: 40 },
+  { name: 'Side And Behind Datsyuk', prepareTime: 20, workTime: 40 },
+  { name: 'Side Datsyuk L', prepareTime: 20, workTime: 40 },
+  { name: 'Side Datsyuk To Wide', prepareTime: 20, workTime: 40 },
+  { name: 'Side Datsyuk To Wide + L', prepareTime: 20, workTime: 40 },
+  { name: '4 Pucks Slide', prepareTime: 20, workTime: 40 },
+  { name: '4 Pucks Infinity Slide', prepareTime: 20, workTime: 40 },
+  { name: 'Side Datsyuk To 8', prepareTime: 20, workTime: 40 },
+  { name: 'Double Side Datsyuk Stack', prepareTime: 20, workTime: 40 },
 ]
