@@ -14,6 +14,9 @@ import exercises from '../exercises'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    list: {
+      marginBottom: theme.spacing(9),
+    },
     appBar: {
       top: 'auto',
       bottom: 0,
@@ -24,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
         marginLeft: theme.spacing(2),
       },
     },
-    fabButton: {
+    startButton: {
       position: 'absolute',
       zIndex: 1,
       top: '-50%',
@@ -43,7 +46,7 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      <List>
+      <List className={classes.list}>
         {exercises.map((exercise, index) => {
           const time = exercise.prepareTime + exercise.workTime
           return (
@@ -63,7 +66,7 @@ export default function Home() {
           <TimerIcon color="primary" />
           <Typography>Total time</Typography>
           <Typography>{toDuration(totalTime)}</Typography>
-          <Fab color="primary" className={classes.fabButton}>
+          <Fab color="primary" className={classes.startButton}>
             <PlayArrowIcon />
           </Fab>
         </Toolbar>
