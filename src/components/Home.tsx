@@ -55,12 +55,12 @@ export default function Home() {
           </ListItemSecondaryAction>
         </ListItem>
       </List>
-      <AppBar position="fixed" color="primary" className={classes.appBar}>
+      <AppBar position="fixed" color="inherit" className={classes.appBar}>
         <Toolbar className={classes.totalTime}>
-          <TimerIcon />
+          <TimerIcon color="primary" />
           <Typography>Total time</Typography>
           <Typography>18:40</Typography>
-          <Fab color="secondary" className={classes.fabButton}>
+          <Fab color="primary" className={classes.fabButton}>
             <PlayArrowIcon />
           </Fab>
         </Toolbar>

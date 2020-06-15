@@ -1,12 +1,16 @@
 import { createMuiTheme } from '@material-ui/core/styles'
 
 export default createMuiTheme({
-  props: {
-    MuiTextField: {
-      variant: 'outlined',
+  palette: {
+    primary: {
+      main: '#6200EE',
     },
-    MuiFab: {
-      color: 'primary',
+    secondary: {
+      main: '#03DAC6',
+    },
+    background: {
+      default: '#FFFFFF',
+      paper: '#FFFFFF',
     },
   },
 })
