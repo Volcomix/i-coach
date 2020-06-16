@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import TimerIcon from '@material-ui/icons/Timer'
 import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import exercises from '../exercises'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -61,12 +62,17 @@ export default function Home() {
           )
         })}
       </List>
-      <AppBar position="fixed" color="inherit" className={classes.appBar}>
+      <AppBar className={classes.appBar} position="fixed" color="inherit">
         <Toolbar className={classes.totalTime}>
           <TimerIcon color="primary" />
           <Typography>Total time</Typography>
           <Typography>{toDuration(totalTime)}</Typography>
-          <Fab color="primary" className={classes.startButton}>
+          <Fab
+            className={classes.startButton}
+            color="primary"
+            component={RouterLink}
+            to="/training"
+          >
             <PlayArrowIcon />
           </Fab>
         </Toolbar>

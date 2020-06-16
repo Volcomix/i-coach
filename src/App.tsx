@@ -1,9 +1,9 @@
-import Container from '@material-ui/core/Container'
 import React, { useReducer } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './components/Home'
+import Training from './components/Training'
 import Exercises from './containers/Exercises'
-import Training from './containers/Training'
+import TrainingLegacy from './containers/Training'
 import brokenStick from './exercises/broken-stick'
 import challenges from './exercises/challenges'
 import datsyuk from './exercises/datsyuk'
@@ -108,23 +108,24 @@ export default function App() {
 
   return (
     <Router basename="/i-coach">
-      <Container maxWidth="sm" disableGutters={true}>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/training">
-            <IntervalsDispatch.Provider value={intervalsDispatch}>
-              <ExercisesDispatch.Provider value={exercisesDispatch}>
-                <Training intervals={intervals} exercises={exercises} />
-              </ExercisesDispatch.Provider>
-            </IntervalsDispatch.Provider>
-          </Route>
-          <Route exact path="/exercises">
-            <Exercises exercises={exercises} />
-          </Route>
-        </Switch>
-      </Container>
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route exact path="/training">
+          <Training />
+        </Route>
+        <Route exact path="/training/legacy">
+          <IntervalsDispatch.Provider value={intervalsDispatch}>
+            <ExercisesDispatch.Provider value={exercisesDispatch}>
+              <TrainingLegacy intervals={intervals} exercises={exercises} />
+            </ExercisesDispatch.Provider>
+          </IntervalsDispatch.Provider>
+        </Route>
+        <Route exact path="/exercises">
+          <Exercises exercises={exercises} />
+        </Route>
+      </Switch>
     </Router>
   )
 }
