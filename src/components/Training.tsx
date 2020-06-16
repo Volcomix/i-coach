@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 'calc(0.4 * min(100vw, 70vh))',
       fontWeight: 500,
     },
+    intervalProgressTrack: {
+      position: 'absolute',
+      opacity: 0.1,
+    },
     intervalProgress: {
       position: 'absolute',
       top: theme.spacing(3),
@@ -117,6 +121,13 @@ export default function Training() {
       <Typography className={classes.intervalTime} variant="h1">
         {maxTime - time}
         <div className={classes.intervalProgress}>
+          <CircularProgress
+            className={classes.intervalProgressTrack}
+            variant="determinate"
+            size="100%"
+            thickness={1.5}
+            value={100}
+          />
           <CircularProgress
             variant="static"
             size="100%"
