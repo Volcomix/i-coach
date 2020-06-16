@@ -3,6 +3,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import exercises from '../exercises'
 
 enum IntervalType {
@@ -70,6 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Training() {
   const classes = useStyles()
+  const history = useHistory()
 
   const [exerciseId, setExerciseId] = useState(0)
   const [intervalType, setIntervalType] = useState(IntervalType.Prepare)
@@ -133,12 +135,15 @@ export default function Training() {
       if (intervalType === IntervalType.Prepare) {
         setIntervalType(IntervalType.Work)
       } else {
+        if (exerciseId === exercises.length - 1) {
+          return history.goBack()
+        }
         setExerciseId(exerciseId + 1)
         setIntervalType(IntervalType.Prepare)
       }
       setIntervalTime(0)
     }
-  }, [exerciseId, intervalType, intervalTime, maxIntervalTime])
+  }, [history, exerciseId, intervalType, intervalTime, maxIntervalTime])
 
   return (
     <div className={classes.root}>
