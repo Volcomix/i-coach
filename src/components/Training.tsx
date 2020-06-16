@@ -1,4 +1,5 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import React, { useEffect, useState } from 'react'
@@ -57,6 +58,13 @@ const useStyles = makeStyles((theme: Theme) =>
       height: `calc(${theme.typography.h3.lineHeight} * ${theme.typography.h3.fontSize})`,
       fontWeight: 500,
     },
+    trainingProgress: {
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      left: 0,
+      height: theme.spacing(1),
+    },
   })
 )
 
@@ -65,14 +73,30 @@ export default function Training() {
 
   const [exerciseId, setExerciseId] = useState(0)
   const [intervalType, setIntervalType] = useState(IntervalType.Prepare)
-  const [time, setTime] = useState(0)
+  const [intervalTime, setIntervalTime] = useState(0)
 
   const exercise = exercises[exerciseId]
 
-  const maxTime =
+  const maxIntervalTime =
     intervalType === IntervalType.Prepare
       ? exercise.prepareTime
       : exercise.workTime
+
+  let trainingTime = 0
+  let maxTrainingTime = 0
+
+  exercises.forEach((exercise, i) => {
+    const exerciseTime = exercise.prepareTime + exercise.workTime
+    if (i < exerciseId) {
+      trainingTime += exerciseTime
+    } else if (i === exerciseId) {
+      if (intervalType === IntervalType.Work) {
+        trainingTime += exercise.prepareTime
+      }
+      trainingTime += intervalTime
+    }
+    maxTrainingTime += exerciseTime
+  })
 
   useEffect(() => {
     let wakeLock: any = null
@@ -92,7 +116,7 @@ export default function Training() {
     requestWakeLock()
 
     const timer = setInterval(() => {
-      setTime((prevTime) => prevTime + 1)
+      setIntervalTime((prevIntervalTime) => prevIntervalTime + 1)
     }, 1000)
 
     return () => {
@@ -105,21 +129,21 @@ export default function Training() {
   }, [])
 
   useEffect(() => {
-    if (time === maxTime) {
+    if (intervalTime === maxIntervalTime) {
       if (intervalType === IntervalType.Prepare) {
         setIntervalType(IntervalType.Work)
       } else {
         setExerciseId(exerciseId + 1)
         setIntervalType(IntervalType.Prepare)
       }
-      setTime(0)
+      setIntervalTime(0)
     }
-  }, [exerciseId, intervalType, time, maxTime])
+  }, [exerciseId, intervalType, intervalTime, maxIntervalTime])
 
   return (
     <div className={classes.root}>
       <Typography className={classes.intervalTime} variant="h1">
-        {maxTime - time}
+        {maxIntervalTime - intervalTime}
         <div className={classes.intervalProgress}>
           <CircularProgress
             className={classes.intervalProgressTrack}
@@ -132,7 +156,7 @@ export default function Training() {
             variant="static"
             size="100%"
             thickness={1.5}
-            value={(100 * time) / maxTime}
+            value={(100 * intervalTime) / maxIntervalTime}
           />
         </div>
       </Typography>
@@ -142,6 +166,11 @@ export default function Training() {
         </span>
         <span className={classes.exerciseName}>{exercise.name}</span>
       </div>
+      <LinearProgress
+        className={classes.trainingProgress}
+        variant="determinate"
+        value={(100 * trainingTime) / maxTrainingTime}
+      />
     </div>
   )
 }
