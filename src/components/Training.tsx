@@ -38,9 +38,18 @@ const useStyles = makeStyles((theme: Theme) =>
     exercise: {
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
+      display: 'flex',
+      flexDirection: 'column',
       textAlign: 'center',
     },
+    next: {
+      ...theme.typography.h4,
+      height: `calc(${theme.typography.h4.lineHeight} * ${theme.typography.h4.fontSize})`,
+      color: theme.palette.text.secondary,
+    },
     exerciseName: {
+      ...theme.typography.h3,
+      height: `calc(${theme.typography.h3.lineHeight} * ${theme.typography.h3.fontSize})`,
       fontWeight: 500,
     },
   })
@@ -96,14 +105,10 @@ export default function Training() {
         </div>
       </Typography>
       <div className={classes.exercise}>
-        {intervalType === IntervalType.Prepare && (
-          <Typography variant="h4" color="textSecondary">
-            Next
-          </Typography>
-        )}
-        <Typography className={classes.exerciseName} variant="h3">
-          {exercise.name}
-        </Typography>
+        <span className={classes.next}>
+          {intervalType === IntervalType.Prepare && 'Next'}
+        </span>
+        <span className={classes.exerciseName}>{exercise.name}</span>
       </div>
     </div>
   )
