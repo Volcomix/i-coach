@@ -70,12 +70,32 @@ export default function Training() {
       : exercise.workTime
 
   useEffect(() => {
+    let wakeLock: any = null
+
+    async function requestWakeLock() {
+      if ('wakeLock' in navigator) {
+        try {
+          wakeLock = await (navigator as any).wakeLock.request('screen')
+        } catch (error) {
+          console.error(`${error.name}, ${error.message}`)
+        }
+      } else {
+        console.warn('Wake lock API is not supported')
+      }
+    }
+
+    requestWakeLock()
+
     const timer = setInterval(() => {
       setTime((prevTime) => prevTime + 1)
     }, 1000)
 
     return () => {
       clearInterval(timer)
+      if (wakeLock !== null) {
+        wakeLock.release()
+        wakeLock = null
+      }
     }
   }, [])
 
