@@ -7,6 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import PauseIcon from '@material-ui/icons/Pause'
+import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import SkipNextIcon from '@material-ui/icons/SkipNext'
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
 import clsx from 'clsx'
@@ -83,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1),
       justifyContent: 'center',
     },
-    pauseButton: {
+    noShadow: {
       boxShadow: theme.shadows[0],
     },
   })
@@ -97,6 +98,7 @@ export default function Training() {
   const [intervalType, setIntervalType] = useState(IntervalType.Prepare)
   const [intervalTime, setIntervalTime] = useState(0)
   const [isControlsVisible, setControlsVisible] = useState(false)
+  const [isTimerRunning, setTimerRunning] = useState(true)
 
   const exercise = exercises[exerciseId]
 
@@ -135,21 +137,28 @@ export default function Training() {
         console.warn('Wake lock API is not supported')
       }
     }
-
     requestWakeLock()
 
-    const timer = setInterval(() => {
-      setIntervalTime((prevIntervalTime) => prevIntervalTime + 1)
-    }, 1000)
-
     return () => {
-      clearInterval(timer)
       if (wakeLock !== null) {
         wakeLock.release()
         wakeLock = null
       }
     }
   }, [])
+
+  useEffect(() => {
+    if (!isTimerRunning) {
+      return
+    }
+    const timer = setInterval(() => {
+      setIntervalTime((prevIntervalTime) => prevIntervalTime + 1)
+    }, 1000)
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [isTimerRunning])
 
   useEffect(() => {
     if (intervalTime === maxIntervalTime) {
@@ -218,8 +227,12 @@ export default function Training() {
           >
             <SkipPreviousIcon />
           </IconButton>
-          <Fab className={classes.pauseButton} color="secondary">
-            <PauseIcon />
+          <Fab
+            className={classes.noShadow}
+            color="secondary"
+            onClick={() => setTimerRunning(!isTimerRunning)}
+          >
+            {isTimerRunning ? <PauseIcon /> : <PlayArrowIcon />}
           </Fab>
           <IconButton
             color="inherit"
