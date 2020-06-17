@@ -1,7 +1,14 @@
+import AppBar from '@material-ui/core/AppBar'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Fab from '@material-ui/core/Fab'
+import IconButton from '@material-ui/core/IconButton'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+import PauseIcon from '@material-ui/icons/Pause'
+import SkipNextIcon from '@material-ui/icons/SkipNext'
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import exercises from '../exercises'
@@ -60,11 +67,19 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 500,
     },
     trainingProgress: {
-      position: 'absolute',
-      right: 0,
-      bottom: 0,
-      left: 0,
       height: theme.spacing(1),
+    },
+    appBar: {
+      top: 'auto',
+      bottom: -theme.spacing(9),
+    },
+    controlBar: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+      justifyContent: 'center',
+    },
+    pauseButton: {
+      boxShadow: theme.shadows[0],
     },
   })
 )
@@ -171,11 +186,40 @@ export default function Training() {
         </span>
         <span className={classes.exerciseName}>{exercise.name}</span>
       </div>
-      <LinearProgress
-        className={classes.trainingProgress}
-        variant="determinate"
-        value={(100 * trainingTime) / maxTrainingTime}
-      />
+      <AppBar className={classes.appBar} position="fixed" color="inherit">
+        <LinearProgress
+          className={classes.trainingProgress}
+          variant="determinate"
+          value={(100 * trainingTime) / maxTrainingTime}
+        />
+        <Toolbar className={classes.controlBar}>
+          <IconButton
+            color="inherit"
+            disabled={exerciseId === 0}
+            onClick={() => {
+              setExerciseId(exerciseId - 1)
+              setIntervalType(IntervalType.Prepare)
+              setIntervalTime(0)
+            }}
+          >
+            <SkipPreviousIcon />
+          </IconButton>
+          <Fab className={classes.pauseButton} color="secondary">
+            <PauseIcon />
+          </Fab>
+          <IconButton
+            color="inherit"
+            disabled={exerciseId === exercises.length - 1}
+            onClick={() => {
+              setExerciseId(exerciseId + 1)
+              setIntervalType(IntervalType.Prepare)
+              setIntervalTime(0)
+            }}
+          >
+            <SkipNextIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
     </div>
   )
 }

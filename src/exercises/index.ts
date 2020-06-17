@@ -19,7 +19,7 @@ export default [
   { name: 'Fake Snapshot', prepareTime: 10, workTime: 30 },
   { name: 'Fake Wristshot', prepareTime: 10, workTime: 30 },
   { name: 'Pump Fake', prepareTime: 10, workTime: 30 },
-  { name: 'Stick Fake', prepareTime: 10, workTime: 30 },
+  // { name: 'Stick Fake', prepareTime: 10, workTime: 30 },
   { name: 'Backhand Toe Pull', prepareTime: 10, workTime: 30 },
   { name: 'Backhand Toe Drag', prepareTime: 10, workTime: 30 },
   { name: 'Backhand To Forehand Toey', prepareTime: 10, workTime: 30 },

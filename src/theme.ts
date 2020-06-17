@@ -6,7 +6,7 @@ export default createMuiTheme({
       main: '#0256ee',
     },
     secondary: {
-      main: '#ee9b02',
+      main: '#000000',
     },
     background: {
       default: '#FFFFFF',
