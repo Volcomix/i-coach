@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import PauseIcon from '@material-ui/icons/Pause'
 import SkipNextIcon from '@material-ui/icons/SkipNext'
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
+import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import exercises from '../exercises'
@@ -72,6 +73,10 @@ const useStyles = makeStyles((theme: Theme) =>
     appBar: {
       top: 'auto',
       bottom: -theme.spacing(9),
+      transition: `bottom ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut}`,
+      '&.open': {
+        bottom: 0,
+      },
     },
     controlBar: {
       marginTop: theme.spacing(1),
@@ -91,6 +96,7 @@ export default function Training() {
   const [exerciseId, setExerciseId] = useState(0)
   const [intervalType, setIntervalType] = useState(IntervalType.Prepare)
   const [intervalTime, setIntervalTime] = useState(0)
+  const [isControlsVisible, setControlsVisible] = useState(false)
 
   const exercise = exercises[exerciseId]
 
@@ -161,7 +167,10 @@ export default function Training() {
   }, [history, exerciseId, intervalType, intervalTime, maxIntervalTime])
 
   return (
-    <div className={classes.root}>
+    <div
+      className={classes.root}
+      onClick={() => setControlsVisible(!isControlsVisible)}
+    >
       <Typography className={classes.intervalTime} variant="h1">
         {maxIntervalTime - intervalTime}
         <div className={classes.intervalProgress}>
@@ -186,7 +195,12 @@ export default function Training() {
         </span>
         <span className={classes.exerciseName}>{exercise.name}</span>
       </div>
-      <AppBar className={classes.appBar} position="fixed" color="inherit">
+      <AppBar
+        className={clsx(classes.appBar, isControlsVisible && 'open')}
+        position="fixed"
+        color="inherit"
+        onClick={(event) => event.stopPropagation()}
+      >
         <LinearProgress
           className={classes.trainingProgress}
           variant="determinate"
