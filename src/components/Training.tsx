@@ -178,7 +178,11 @@ export default function Training() {
   return (
     <div
       className={classes.root}
-      onClick={() => setControlsVisible(!isControlsVisible)}
+      onClick={() => {
+        if (!isTimerRunning) return
+        setTimerRunning(false)
+        setControlsVisible(true)
+      }}
     >
       <Typography className={classes.intervalTime} variant="h1">
         {maxIntervalTime - intervalTime}
@@ -218,11 +222,18 @@ export default function Training() {
         <Toolbar className={classes.controlBar}>
           <IconButton
             color="inherit"
-            disabled={exerciseId === 0}
+            disabled={
+              exerciseId === 0 &&
+              intervalType === IntervalType.Prepare &&
+              intervalTime === 0
+            }
             onClick={() => {
-              setExerciseId(exerciseId - 1)
-              setIntervalType(IntervalType.Prepare)
-              setIntervalTime(0)
+              if (intervalType === IntervalType.Prepare && intervalTime === 0) {
+                setExerciseId(exerciseId - 1)
+              } else {
+                setIntervalType(IntervalType.Prepare)
+                setIntervalTime(0)
+              }
             }}
           >
             <SkipPreviousIcon />
@@ -230,7 +241,12 @@ export default function Training() {
           <Fab
             className={classes.noShadow}
             color="secondary"
-            onClick={() => setTimerRunning(!isTimerRunning)}
+            onClick={() => {
+              if (!isTimerRunning) {
+                setControlsVisible(false)
+              }
+              setTimerRunning(!isTimerRunning)
+            }}
           >
             {isTimerRunning ? <PauseIcon /> : <PlayArrowIcon />}
           </Fab>
