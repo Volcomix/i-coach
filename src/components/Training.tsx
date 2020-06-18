@@ -1,4 +1,5 @@
 import AppBar from '@material-ui/core/AppBar'
+import ButtonBase from '@material-ui/core/ButtonBase'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import IconButton from '@material-ui/core/IconButton'
@@ -183,10 +184,12 @@ export default function Training() {
   }, [history, exerciseId, intervalType, intervalTime, maxIntervalTime])
 
   return (
-    <div
+    <ButtonBase
+      component="div"
       className={classes.root}
+      disableTouchRipple={isControlsVisible}
       onClick={() => {
-        if (!isTimerRunning) return
+        if (isControlsVisible) return
         setTimerRunning(false)
         setControlsVisible(true)
       }}
@@ -244,7 +247,6 @@ export default function Training() {
         className={clsx(classes.appBar, isControlsVisible && 'open')}
         position="fixed"
         color="inherit"
-        onClick={(event) => event.stopPropagation()}
       >
         <LinearProgress
           className={classes.trainingProgress}
@@ -295,6 +297,6 @@ export default function Training() {
           </IconButton>
         </Toolbar>
       </AppBar>
-    </div>
+    </ButtonBase>
   )
 }
