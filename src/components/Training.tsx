@@ -124,6 +124,9 @@ export default function Training() {
   })
 
   useEffect(() => {
+    if (!isTimerRunning) {
+      return
+    }
     let wakeLock: any = null
 
     async function requestWakeLock() {
@@ -133,8 +136,6 @@ export default function Training() {
         } catch (error) {
           console.error(`${error.name}, ${error.message}`)
         }
-      } else {
-        console.warn('Wake lock API is not supported')
       }
     }
     requestWakeLock()
@@ -145,7 +146,7 @@ export default function Training() {
         wakeLock = null
       }
     }
-  }, [])
+  }, [isTimerRunning])
 
   useEffect(() => {
     if (!isTimerRunning) {
