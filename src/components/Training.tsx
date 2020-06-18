@@ -6,6 +6,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import PauseIcon from '@material-ui/icons/Pause'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import SkipNextIcon from '@material-ui/icons/SkipNext'
@@ -29,6 +30,11 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
     },
+    backButton: {
+      position: 'absolute',
+      top: theme.spacing(1),
+      left: theme.spacing(1),
+    },
     intervalTime: {
       marginTop: -theme.spacing(12),
       width: 'min(100vw, 70vh)',
@@ -40,16 +46,16 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 'calc(0.4 * min(100vw, 70vh))',
       fontWeight: 500,
     },
-    intervalProgressTrack: {
-      position: 'absolute',
-      opacity: 0.1,
-    },
     intervalProgress: {
       position: 'absolute',
       top: theme.spacing(3),
       right: theme.spacing(3),
       bottom: theme.spacing(3),
       left: theme.spacing(3),
+    },
+    intervalProgressTrack: {
+      position: 'absolute',
+      opacity: 0.1,
     },
     exercise: {
       marginLeft: theme.spacing(1),
@@ -185,18 +191,43 @@ export default function Training() {
         setControlsVisible(true)
       }}
     >
-      <Typography className={classes.intervalTime} variant="h1">
+      {isControlsVisible && (
+        <IconButton
+          className={classes.backButton}
+          color="inherit"
+          onClick={() => history.goBack()}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+      )}
+      <Typography
+        className={classes.intervalTime}
+        variant="h1"
+        color={
+          maxIntervalTime - intervalTime > 3
+            ? 'textPrimary'
+            : intervalType === IntervalType.Prepare
+            ? 'primary'
+            : 'secondary'
+        }
+      >
         {maxIntervalTime - intervalTime}
         <div className={classes.intervalProgress}>
           <CircularProgress
             className={classes.intervalProgressTrack}
             variant="determinate"
+            color={
+              intervalType === IntervalType.Prepare ? 'primary' : 'secondary'
+            }
             size="100%"
             thickness={1.5}
             value={100}
           />
           <CircularProgress
             variant="static"
+            color={
+              intervalType === IntervalType.Prepare ? 'primary' : 'secondary'
+            }
             size="100%"
             thickness={1.5}
             value={(100 * intervalTime) / maxIntervalTime}
@@ -241,7 +272,7 @@ export default function Training() {
           </IconButton>
           <Fab
             className={classes.noShadow}
-            color="secondary"
+            color="primary"
             onClick={() => {
               if (!isTimerRunning) {
                 setControlsVisible(false)
