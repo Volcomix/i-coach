@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     backButton: {
       position: 'absolute',
-      top: theme.spacing(1),
-      left: theme.spacing(1),
+      top: 0,
+      left: 0,
     },
     intervalTime: {
       marginTop: -theme.spacing(12),
