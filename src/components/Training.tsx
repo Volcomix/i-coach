@@ -58,6 +58,15 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'absolute',
       opacity: 0.1,
     },
+    intervalProgressIndicator: {
+      '&.running .MuiCircularProgress-circle': {
+        transitionDuration: '1s',
+        transitionTimingFunction: 'linear',
+      },
+      '&.running.done .MuiCircularProgress-circle': {
+        transitionDuration: '300ms',
+      },
+    },
     exercise: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
@@ -113,7 +122,8 @@ export default function Training() {
   const [intervalType, setIntervalType] = useState(IntervalType.Prepare)
   const [intervalTime, setIntervalTime] = useState(0)
   const [isControlsVisible, setControlsVisible] = useState(false)
-  const [isTimerRunning, setTimerRunning] = useState(true)
+  const [isTimerRunning, setTimerRunning] = useState(false)
+  const [isIntervalDone, setIntervalDone] = useState(false)
 
   const exercise = exercises[exerciseId]
 
@@ -137,6 +147,13 @@ export default function Training() {
     }
     maxTrainingTime += exerciseTime
   })
+
+  useEffect(() => {
+    // Enforces the initial timer animation
+    setTimeout(() => {
+      setTimerRunning(true)
+    }, 0)
+  }, [])
 
   useEffect(() => {
     if (!isTimerRunning) {
@@ -188,6 +205,11 @@ export default function Training() {
         setIntervalType(IntervalType.Prepare)
       }
       setIntervalTime(0)
+      setIntervalDone(false)
+    } else if (intervalTime === maxIntervalTime - 1) {
+      setTimeout(() => {
+        setIntervalDone(true)
+      }, 650)
     }
   }, [history, exerciseId, intervalType, intervalTime, maxIntervalTime])
 
@@ -235,13 +257,23 @@ export default function Training() {
             value={100}
           />
           <CircularProgress
+            className={clsx(
+              classes.intervalProgressIndicator,
+              isTimerRunning && 'running',
+              isIntervalDone && 'done'
+            )}
             variant="static"
             color={
               intervalType === IntervalType.Prepare ? 'primary' : 'secondary'
             }
             size="100%"
             thickness={1.5}
-            value={(100 * intervalTime) / maxIntervalTime}
+            value={
+              isIntervalDone
+                ? 0
+                : (100 * (isTimerRunning ? intervalTime + 1 : intervalTime)) /
+                  maxIntervalTime
+            }
           />
         </div>
       </Typography>
