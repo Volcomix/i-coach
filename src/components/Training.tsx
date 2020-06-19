@@ -205,13 +205,22 @@ export default function Training() {
         setIntervalType(IntervalType.Prepare)
       }
       setIntervalTime(0)
-      setIntervalDone(false)
     } else if (intervalTime === maxIntervalTime - 1) {
       setTimeout(() => {
-        setIntervalDone(true)
+        if (isTimerRunning) {
+          setIntervalDone(true)
+        }
       }, 650)
     }
-  }, [history, exerciseId, intervalType, intervalTime, maxIntervalTime])
+    setIntervalDone(false)
+  }, [
+    history,
+    exerciseId,
+    intervalType,
+    intervalTime,
+    maxIntervalTime,
+    isTimerRunning,
+  ])
 
   return (
     <ButtonBase
@@ -269,7 +278,7 @@ export default function Training() {
             size="100%"
             thickness={1.5}
             value={
-              isIntervalDone
+              isTimerRunning && isIntervalDone
                 ? 0
                 : (100 * (isTimerRunning ? intervalTime + 1 : intervalTime)) /
                   maxIntervalTime
