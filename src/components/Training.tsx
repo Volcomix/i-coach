@@ -4,7 +4,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import IconButton from '@material-ui/core/IconButton'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
@@ -91,8 +91,16 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1),
       justifyContent: 'center',
     },
-    noShadow: {
+    playPauseButton: {
+      backgroundColor: theme.palette.text.primary,
+      color: theme.palette.background.paper,
       boxShadow: theme.shadows[0],
+      '&:hover': {
+        backgroundColor: fade(
+          theme.palette.text.primary,
+          1 - theme.palette.action.hoverOpacity
+        ),
+      },
     },
   })
 )
@@ -273,8 +281,7 @@ export default function Training() {
             <SkipPreviousIcon />
           </IconButton>
           <Fab
-            className={classes.noShadow}
-            color="primary"
+            className={classes.playPauseButton}
             onClick={() => {
               if (!isTimerRunning) {
                 setControlsVisible(false)
