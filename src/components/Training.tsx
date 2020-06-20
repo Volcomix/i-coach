@@ -3,6 +3,7 @@ import ButtonBase from '@material-ui/core/ButtonBase'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import Fade from '@material-ui/core/Fade'
+import Grow from '@material-ui/core/Grow'
 import IconButton from '@material-ui/core/IconButton'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import {
@@ -302,9 +303,11 @@ export default function Training() {
         </div>
       </Typography>
       <div className={classes.exercise}>
-        <span className={classes.next}>
-          {intervalType === IntervalType.Prepare && 'Next'}
-        </span>
+        <div className={classes.next}>
+          <Grow in={intervalType === IntervalType.Prepare && !isIntervalDone}>
+            <div>Next</div>
+          </Grow>
+        </div>
         <span className={classes.exerciseName}>{exercise.name}</span>
       </div>
       <AppBar
