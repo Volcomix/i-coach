@@ -2,6 +2,7 @@ import AppBar from '@material-ui/core/AppBar'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
+import Fade from '@material-ui/core/Fade'
 import IconButton from '@material-ui/core/IconButton'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import {
@@ -73,6 +74,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       '&.running.done .MuiCircularProgress-circle': {
         transitionDuration: '300ms',
+        transitionTimingFunction: theme.transitions.easing.easeInOut,
       },
     },
     exercise: {
@@ -240,7 +242,7 @@ export default function Training() {
         setControlsVisible(true)
       }}
     >
-      {isControlsVisible && (
+      <Fade in={isControlsVisible}>
         <IconButton
           className={classes.backButton}
           color="inherit"
@@ -248,7 +250,7 @@ export default function Training() {
         >
           <ArrowBackIcon />
         </IconButton>
-      )}
+      </Fade>
       <Typography
         className={classes.intervalTime}
         variant="h1"
