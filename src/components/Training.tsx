@@ -1,3 +1,4 @@
+import { Slide } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '&.disabled': {
         cursor: 'auto',
       },
+      overflowX: 'hidden',
     },
     backButton: {
       position: 'absolute',
@@ -313,7 +315,18 @@ export default function Training() {
             <div>Next</div>
           </Grow>
         </div>
-        <span className={classes.exerciseName}>{exercise.name}</span>
+        <Slide
+          in={
+            !(
+              intervalType === IntervalType.Work &&
+              isTimerRunning &&
+              isIntervalDone
+            )
+          }
+          direction={isIntervalDone ? 'right' : 'left'}
+        >
+          <span className={classes.exerciseName}>{exercise.name}</span>
+        </Slide>
       </div>
       <AppBar
         className={clsx(classes.appBar, isControlsVisible && 'open')}
