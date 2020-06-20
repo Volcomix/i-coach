@@ -4,7 +4,12 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Fab from '@material-ui/core/Fab'
 import IconButton from '@material-ui/core/IconButton'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles'
+import {
+  createStyles,
+  lighten,
+  makeStyles,
+  Theme,
+} from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
@@ -30,11 +35,14 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      '&.disabled': {
+        cursor: 'auto',
+      },
     },
     backButton: {
       position: 'absolute',
-      top: 0,
-      left: 0,
+      top: theme.spacing(1),
+      left: theme.spacing(1),
     },
     intervalTime: {
       marginTop: -theme.spacing(12),
@@ -96,8 +104,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     controlBar: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
+      minHeight: theme.spacing(9),
       justifyContent: 'center',
     },
     playPauseButton: {
@@ -105,9 +112,9 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.background.paper,
       boxShadow: theme.shadows[0],
       '&:hover': {
-        backgroundColor: fade(
+        backgroundColor: lighten(
           theme.palette.text.primary,
-          1 - theme.palette.action.hoverOpacity
+          theme.palette.action.hoverOpacity
         ),
       },
     },
@@ -225,7 +232,7 @@ export default function Training() {
   return (
     <ButtonBase
       component="div"
-      className={classes.root}
+      className={clsx(classes.root, isControlsVisible && 'disabled')}
       disableTouchRipple={isControlsVisible}
       onClick={() => {
         if (isControlsVisible) return
