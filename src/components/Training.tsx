@@ -255,11 +255,9 @@ export default function Training() {
         className={classes.intervalTime}
         variant="h1"
         color={
-          maxIntervalTime - intervalTime > 3
-            ? 'textPrimary'
-            : intervalType === IntervalType.Prepare
-            ? 'primary'
-            : 'secondary'
+          intervalType === IntervalType.Prepare
+            ? 'textSecondary'
+            : 'textPrimary'
         }
       >
         {maxIntervalTime - intervalTime}
@@ -268,7 +266,7 @@ export default function Training() {
             className={classes.intervalProgressTrack}
             variant="determinate"
             color={
-              intervalType === IntervalType.Prepare ? 'primary' : 'secondary'
+              intervalType === IntervalType.Prepare ? 'inherit' : 'primary'
             }
             size="100%"
             thickness={1.5}
@@ -282,7 +280,7 @@ export default function Training() {
             )}
             variant="static"
             color={
-              intervalType === IntervalType.Prepare ? 'primary' : 'secondary'
+              intervalType === IntervalType.Prepare ? 'inherit' : 'primary'
             }
             size="100%"
             thickness={1.5}
