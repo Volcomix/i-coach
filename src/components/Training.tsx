@@ -304,7 +304,12 @@ export default function Training() {
       </Typography>
       <div className={classes.exercise}>
         <div className={classes.next}>
-          <Grow in={intervalType === IntervalType.Prepare && !isIntervalDone}>
+          <Grow
+            in={
+              intervalType === IntervalType.Prepare &&
+              !(isTimerRunning && isIntervalDone)
+            }
+          >
             <div>Next</div>
           </Grow>
         </div>
