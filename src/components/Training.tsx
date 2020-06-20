@@ -55,6 +55,14 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       fontSize: 'calc(0.4 * min(100vw, 70vh))',
       fontWeight: 500,
+      transitionProperty: 'color',
+      transitionDuration: `${theme.transitions.duration.short}ms`,
+      transitionTimingFunction: theme.transitions.easing.easeOut,
+      '& .MuiCircularProgress-svg': {
+        transitionProperty: 'color',
+        transitionDuration: `${theme.transitions.duration.short}ms`,
+        transitionTimingFunction: theme.transitions.easing.easeOut,
+      },
     },
     intervalProgress: {
       position: 'absolute',
