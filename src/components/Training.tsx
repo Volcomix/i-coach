@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '&.appear-active, &.enter-active': {
         opacity: 1,
         transform: 'none',
-        transition: `opacity var(--slide-duration) linear, transform var(--slide-duration) ${theme.transitions.easing.easeOut}`,
+        transition: `opacity 100ms linear, transform 100ms ${theme.transitions.easing.easeOut}`,
       },
       '&.exit': {
         opacity: 1,
@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '&.exit-active': {
         opacity: 0,
         transform: 'translateX(var(--exit-translate-x))',
-        transition: `opacity var(--slide-duration) linear var(--slide-delay), transform var(--slide-duration) ${theme.transitions.easing.easeIn} var(--slide-delay)`,
+        transition: `opacity 100ms linear, transform 100ms ${theme.transitions.easing.easeIn}`,
       },
     },
     trainingProgress: {
@@ -324,7 +324,7 @@ export default function Training() {
             size="100%"
             thickness={1.5}
             value={
-              isTimerRunning && isIntervalDone
+              isIntervalDone
                 ? 0
                 : (100 * (isTimerRunning ? intervalTime + 1 : intervalTime)) /
                   maxIntervalTime
@@ -340,40 +340,17 @@ export default function Training() {
               slideDirection === SlideDirection.Left ? '200px' : '-200px',
             '--exit-translate-x':
               slideDirection === SlideDirection.Left ? '-200px' : '200px',
-            '--slide-duration': isTimerRunning ? '150ms' : '100ms',
-            '--slide-delay': isTimerRunning ? '200ms' : '0s',
           } as CSSProperties
         }
       >
         <div className={classes.next}>
-          <Grow
-            in={
-              intervalType === IntervalType.Prepare &&
-              !(isTimerRunning && isIntervalDone)
-            }
-          >
+          <Grow in={intervalType === IntervalType.Prepare}>
             <div>Next</div>
           </Grow>
         </div>
         <SwitchTransition>
-          <CSSTransition
-            key={
-              intervalType === IntervalType.Work &&
-              isTimerRunning &&
-              isIntervalDone
-                ? exerciseId + 1
-                : exerciseId
-            }
-            timeout={isTimerRunning ? 350 : 100}
-            appear
-          >
-            <span className={classes.exerciseName}>
-              {intervalType === IntervalType.Work &&
-              isTimerRunning &&
-              isIntervalDone
-                ? exercises[exerciseId + 1].name
-                : exercise.name}
-            </span>
+          <CSSTransition key={exerciseId} timeout={100} appear>
+            <span className={classes.exerciseName}>{exercise.name}</span>
           </CSSTransition>
         </SwitchTransition>
       </div>
