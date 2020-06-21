@@ -67,10 +67,27 @@ const useStyles = makeStyles((theme: Theme) =>
       transitionProperty: 'color',
       transitionDuration: `${theme.transitions.duration.short}ms`,
       transitionTimingFunction: theme.transitions.easing.easeOut,
+      '& .countdown': {
+        animation: '$countdown 1s ease-in-out infinite',
+      },
       '& .MuiCircularProgress-svg': {
         transitionProperty: 'color',
         transitionDuration: `${theme.transitions.duration.short}ms`,
         transitionTimingFunction: theme.transitions.easing.easeOut,
+      },
+    },
+    '@keyframes countdown': {
+      from: {
+        transform: 'scale(1)',
+      },
+      '10%': {
+        transform: 'scale(1.25)',
+      },
+      '75%': {
+        transform: 'scale(1)',
+      },
+      to: {
+        transform: 'scale(1)',
       },
     },
     intervalProgress: {
@@ -299,7 +316,13 @@ export default function Training() {
             : 'textPrimary'
         }
       >
-        {maxIntervalTime - intervalTime}
+        <span
+          className={clsx(
+            isTimerRunning && maxIntervalTime - intervalTime <= 3 && 'countdown'
+          )}
+        >
+          {maxIntervalTime - intervalTime}
+        </span>
         <div className={classes.intervalProgress}>
           <CircularProgress
             className={classes.intervalProgressTrack}
