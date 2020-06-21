@@ -1,4 +1,3 @@
-import { Slide } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -21,13 +20,20 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import SkipNextIcon from '@material-ui/icons/SkipNext'
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
 import clsx from 'clsx'
-import React, { useEffect, useState } from 'react'
+import React, { CSSProperties, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import CSSTransition from 'react-transition-group/CSSTransition'
+import SwitchTransition from 'react-transition-group/SwitchTransition'
 import exercises from '../exercises'
 
 enum IntervalType {
   Prepare,
   Work,
+}
+
+enum SlideDirection {
+  Left,
+  Right,
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -104,6 +110,24 @@ const useStyles = makeStyles((theme: Theme) =>
       ...theme.typography.h3,
       height: `calc(${theme.typography.h3.lineHeight} * ${theme.typography.h3.fontSize})`,
       fontWeight: 500,
+      '&.appear, &.enter': {
+        opacity: 0,
+        transform: 'translateX(var(--enter-translate-x))',
+      },
+      '&.appear-active, &.enter-active': {
+        opacity: 1,
+        transform: 'none',
+        transition: `opacity var(--slide-duration) linear, transform var(--slide-duration) ${theme.transitions.easing.easeOut}`,
+      },
+      '&.exit': {
+        opacity: 1,
+        transform: 'none',
+      },
+      '&.exit-active': {
+        opacity: 0,
+        transform: 'translateX(var(--exit-translate-x))',
+        transition: `opacity var(--slide-duration) linear var(--slide-delay), transform var(--slide-duration) ${theme.transitions.easing.easeIn} var(--slide-delay)`,
+      },
     },
     trainingProgress: {
       height: theme.spacing(1),
@@ -144,6 +168,7 @@ export default function Training() {
   const [isControlsVisible, setControlsVisible] = useState(false)
   const [isTimerRunning, setTimerRunning] = useState(false)
   const [isIntervalDone, setIntervalDone] = useState(false)
+  const [slideDirection, setSlideDirection] = useState(SlideDirection.Left)
 
   const exercise = exercises[exerciseId]
 
@@ -225,14 +250,16 @@ export default function Training() {
         setIntervalType(IntervalType.Prepare)
       }
       setIntervalTime(0)
-    } else if (intervalTime === maxIntervalTime - 1) {
-      setTimeout(() => {
-        if (isTimerRunning) {
-          setIntervalDone(true)
-        }
+      setIntervalDone(false)
+    } else if (isTimerRunning && intervalTime === maxIntervalTime - 1) {
+      const timer = setTimeout(() => {
+        setIntervalDone(true)
       }, 650)
+
+      return () => {
+        clearTimeout(timer)
+      }
     }
-    setIntervalDone(false)
   }, [
     history,
     exerciseId,
@@ -251,6 +278,7 @@ export default function Training() {
         if (isControlsVisible) return
         setTimerRunning(false)
         setControlsVisible(true)
+        setIntervalDone(false)
       }}
     >
       <Fade in={isControlsVisible}>
@@ -304,7 +332,19 @@ export default function Training() {
           />
         </div>
       </Typography>
-      <div className={classes.exercise}>
+      <div
+        className={classes.exercise}
+        style={
+          {
+            '--enter-translate-x':
+              slideDirection === SlideDirection.Left ? '200px' : '-200px',
+            '--exit-translate-x':
+              slideDirection === SlideDirection.Left ? '-200px' : '200px',
+            '--slide-duration': isTimerRunning ? '150ms' : '100ms',
+            '--slide-delay': isTimerRunning ? '200ms' : '0s',
+          } as CSSProperties
+        }
+      >
         <div className={classes.next}>
           <Grow
             in={
@@ -315,18 +355,27 @@ export default function Training() {
             <div>Next</div>
           </Grow>
         </div>
-        <Slide
-          in={
-            !(
+        <SwitchTransition>
+          <CSSTransition
+            key={
               intervalType === IntervalType.Work &&
               isTimerRunning &&
               isIntervalDone
-            )
-          }
-          direction={isIntervalDone ? 'right' : 'left'}
-        >
-          <span className={classes.exerciseName}>{exercise.name}</span>
-        </Slide>
+                ? exerciseId + 1
+                : exerciseId
+            }
+            timeout={isTimerRunning ? 350 : 100}
+            appear
+          >
+            <span className={classes.exerciseName}>
+              {intervalType === IntervalType.Work &&
+              isTimerRunning &&
+              isIntervalDone
+                ? exercises[exerciseId + 1].name
+                : exercise.name}
+            </span>
+          </CSSTransition>
+        </SwitchTransition>
       </div>
       <AppBar
         className={clsx(classes.appBar, isControlsVisible && 'open')}
@@ -349,6 +398,7 @@ export default function Training() {
             onClick={() => {
               if (intervalType === IntervalType.Prepare && intervalTime === 0) {
                 setExerciseId(exerciseId - 1)
+                setSlideDirection(SlideDirection.Right)
               } else {
                 setIntervalType(IntervalType.Prepare)
                 setIntervalTime(0)
@@ -362,6 +412,7 @@ export default function Training() {
             onClick={() => {
               if (!isTimerRunning) {
                 setControlsVisible(false)
+                setSlideDirection(SlideDirection.Left)
               }
               setTimerRunning(!isTimerRunning)
             }}
@@ -375,6 +426,7 @@ export default function Training() {
               setExerciseId(exerciseId + 1)
               setIntervalType(IntervalType.Prepare)
               setIntervalTime(0)
+              setSlideDirection(SlideDirection.Left)
             }}
           >
             <SkipNextIcon />
