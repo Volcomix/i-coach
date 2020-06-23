@@ -180,6 +180,7 @@ export default function Training() {
   const [isIntervalDone, setIntervalDone] = useState(false)
   const [slideDirection, setSlideDirection] = useState(SlideDirection.Left)
   const [lastStart, setLastStart] = useState(Date.now())
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
 
   const exercise = exercises[exerciseId]
 
@@ -279,6 +280,29 @@ export default function Training() {
     maxIntervalTime,
     isTimerRunning,
   ])
+
+  useEffect(() => {
+    if (window.AudioContext) {
+      const audioContext = new AudioContext()
+      setAudioContext(audioContext)
+      return () => {
+        audioContext.close()
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const remainingTime = maxIntervalTime - intervalTime
+    if (!audioContext || !isTimerRunning || remainingTime > 3) {
+      return
+    }
+    const oscillator = audioContext.createOscillator()
+    oscillator.type = 'square'
+    oscillator.frequency.value = 880
+    oscillator.connect(audioContext.destination)
+    oscillator.start()
+    oscillator.stop(audioContext.currentTime + (remainingTime === 0 ? 1 : 0.5))
+  }, [intervalTime, maxIntervalTime, isTimerRunning, audioContext])
 
   return (
     <ButtonBase
