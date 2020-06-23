@@ -67,27 +67,20 @@ const useStyles = makeStyles((theme: Theme) =>
       transitionProperty: 'color',
       transitionDuration: `${theme.transitions.duration.short}ms`,
       transitionTimingFunction: theme.transitions.easing.easeOut,
-      '& .countdown': {
-        animation: '$countdown 1s ease-in-out infinite',
-      },
       '& .MuiCircularProgress-svg': {
         transitionProperty: 'color',
         transitionDuration: `${theme.transitions.duration.short}ms`,
         transitionTimingFunction: theme.transitions.easing.easeOut,
       },
     },
-    '@keyframes countdown': {
-      from: {
+    intervalTimeSeconds: {
+      transition: `transform ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeOut}`,
+      '.countdown &.enter': {
         transform: 'scale(1)',
       },
-      '10%': {
-        transform: 'scale(1.25)',
-      },
-      '75%': {
-        transform: 'scale(1)',
-      },
-      to: {
-        transform: 'scale(1)',
+      '.countdown &.enter-active': {
+        transform: 'scale(1.001)',
+        transition: 'transform 500ms cubic-bezier(0, 0, 0.5, 250)',
       },
     },
     intervalProgress: {
@@ -186,6 +179,7 @@ export default function Training() {
   const [isTimerRunning, setTimerRunning] = useState(false)
   const [isIntervalDone, setIntervalDone] = useState(false)
   const [slideDirection, setSlideDirection] = useState(SlideDirection.Left)
+  const [lastStart, setLastStart] = useState(Date.now())
 
   const exercise = exercises[exerciseId]
 
@@ -308,7 +302,10 @@ export default function Training() {
         </IconButton>
       </Fade>
       <Typography
-        className={classes.intervalTime}
+        className={clsx(
+          classes.intervalTime,
+          isTimerRunning && maxIntervalTime - intervalTime <= 3 && 'countdown'
+        )}
         variant="h1"
         color={
           intervalType === IntervalType.Prepare
@@ -316,13 +313,17 @@ export default function Training() {
             : 'textPrimary'
         }
       >
-        <span
-          className={clsx(
-            isTimerRunning && maxIntervalTime - intervalTime <= 3 && 'countdown'
-          )}
-        >
-          {maxIntervalTime - intervalTime}
-        </span>
+        <SwitchTransition>
+          <CSSTransition
+            key={`${lastStart}-${intervalTime}`}
+            timeout={500}
+            exit={false}
+          >
+            <span className={classes.intervalTimeSeconds}>
+              {maxIntervalTime - intervalTime}
+            </span>
+          </CSSTransition>
+        </SwitchTransition>
         <div className={classes.intervalProgress}>
           <CircularProgress
             className={classes.intervalProgressTrack}
@@ -413,6 +414,7 @@ export default function Training() {
               if (!isTimerRunning) {
                 setControlsVisible(false)
                 setSlideDirection(SlideDirection.Left)
+                setLastStart(Date.now())
               }
               setTimerRunning(!isTimerRunning)
             }}
