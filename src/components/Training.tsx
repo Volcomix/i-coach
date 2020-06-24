@@ -306,6 +306,68 @@ export default function Training() {
     )
   }, [intervalTime, maxIntervalTime, isTimerRunning, audioContext])
 
+  useEffect(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      return
+    }
+    const recognition = new SpeechRecognition()
+    recognition.continuous = true
+    recognition.onresult = (event) => {
+      // TODO use grammar and translations
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          const pauseWords = [
+            'pause',
+            'stop',
+            'attend',
+            'attendre',
+            'arrête',
+            'arrêter',
+          ]
+          const pauseWord = pauseWords.find((word) =>
+            event.results[i][0].transcript.includes(word)
+          )
+          if (pauseWord) {
+            // FIXME avoid infinite loop when device earing itself
+            speechSynthesis.speak(new SpeechSynthesisUtterance('pause'))
+            setTimerRunning(false)
+            return
+          }
+
+          const playWords = [
+            'continue',
+            'continuer',
+            'reprise',
+            'reprend',
+            'reprendre',
+            'play',
+            'go',
+            'vas-y',
+            "c'est parti",
+            "c'est bon",
+            'prêt',
+            'prête',
+          ]
+          const playWord = playWords.find((word) =>
+            event.results[i][0].transcript.includes(word)
+          )
+          if (playWord) {
+            // FIXME avoid infinite loop when device earing itself
+            speechSynthesis.speak(new SpeechSynthesisUtterance('reprise'))
+            setTimerRunning(true)
+            return
+          }
+        }
+      }
+    }
+    recognition.start()
+    return () => {
+      recognition.abort()
+    }
+  }, [])
+
   return (
     <ButtonBase
       component="div"
