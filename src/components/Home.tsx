@@ -18,11 +18,11 @@ const useStyles = makeStyles((theme: Theme) =>
     list: {
       marginBottom: theme.spacing(9),
     },
-    appBar: {
+    bottomAppBar: {
       top: 'auto',
       bottom: 0,
     },
-    totalTime: {
+    trainingDuration: {
       justifyContent: 'center',
       '& > *:not(:first-child)': {
         marginLeft: theme.spacing(2),
@@ -40,18 +40,19 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Home() {
   const classes = useStyles()
 
-  const totalTime = exercises.reduce(
-    (result, exercise) => result + exercise.prepareTime + exercise.workTime,
+  const trainingDuration = exercises.reduce(
+    (result, exercise) =>
+      result + exercise.prepareDuration + exercise.workDuration,
     0
   )
 
   return (
     <React.Fragment>
       <List className={classes.list}>
-        {exercises.map((exercise, index) => {
-          const time = exercise.prepareTime + exercise.workTime
+        {exercises.map((exercise, exerciseIndex) => {
+          const time = exercise.prepareDuration + exercise.workDuration
           return (
-            <ListItem key={index}>
+            <ListItem key={exerciseIndex}>
               <ListItemText primary={exercise.name} />
               <ListItemSecondaryAction>
                 <Typography variant="body2" color="textSecondary">
@@ -62,11 +63,11 @@ export default function Home() {
           )
         })}
       </List>
-      <AppBar className={classes.appBar} position="fixed" color="inherit">
-        <Toolbar className={classes.totalTime}>
+      <AppBar className={classes.bottomAppBar} position="fixed" color="inherit">
+        <Toolbar className={classes.trainingDuration}>
           <TimerIcon color="primary" />
-          <Typography>Total time</Typography>
-          <Typography>{toDuration(totalTime)}</Typography>
+          <Typography>Training duration</Typography>
+          <Typography>{toDuration(trainingDuration)}</Typography>
           <Fab
             className={classes.startButton}
             color="primary"

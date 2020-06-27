@@ -1,35 +1,19 @@
-import AppBar from '@material-ui/core/AppBar'
 import ButtonBase from '@material-ui/core/ButtonBase'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Fab from '@material-ui/core/Fab'
 import Fade from '@material-ui/core/Fade'
 import Grow from '@material-ui/core/Grow'
 import IconButton from '@material-ui/core/IconButton'
-import LinearProgress from '@material-ui/core/LinearProgress'
-import {
-  createStyles,
-  lighten,
-  makeStyles,
-  Theme,
-} from '@material-ui/core/styles'
-import Toolbar from '@material-ui/core/Toolbar'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import PauseIcon from '@material-ui/icons/Pause'
-import PlayArrowIcon from '@material-ui/icons/PlayArrow'
-import SkipNextIcon from '@material-ui/icons/SkipNext'
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
 import clsx from 'clsx'
 import React, { CSSProperties, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import CSSTransition from 'react-transition-group/CSSTransition'
 import SwitchTransition from 'react-transition-group/SwitchTransition'
 import exercises from '../exercises'
-
-enum IntervalType {
-  Prepare,
-  Work,
-}
+import { IntervalType } from '../types'
+import { TimerControls } from './TimerControls'
 
 enum SlideDirection {
   Left,
@@ -139,32 +123,6 @@ const useStyles = makeStyles((theme: Theme) =>
         transition: `opacity 100ms linear, transform 100ms ${theme.transitions.easing.easeIn}`,
       },
     },
-    trainingProgress: {
-      height: theme.spacing(1),
-    },
-    appBar: {
-      top: 'auto',
-      bottom: -theme.spacing(9),
-      transition: `bottom ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut}`,
-      '&.open': {
-        bottom: 0,
-      },
-    },
-    controlBar: {
-      minHeight: theme.spacing(9),
-      justifyContent: 'center',
-    },
-    playPauseButton: {
-      backgroundColor: theme.palette.text.primary,
-      color: theme.palette.background.paper,
-      boxShadow: theme.shadows[0],
-      '&:hover': {
-        backgroundColor: lighten(
-          theme.palette.text.primary,
-          theme.palette.action.hoverOpacity
-        ),
-      },
-    },
   })
 )
 
@@ -172,37 +130,36 @@ export default function Training() {
   const classes = useStyles()
   const history = useHistory()
 
-  const [exerciseId, setExerciseId] = useState(0)
+  const [exerciseIndex, setExerciseIndex] = useState(0)
   const [intervalType, setIntervalType] = useState(IntervalType.Prepare)
-  const [intervalTime, setIntervalTime] = useState(0)
-  const [isControlsVisible, setControlsVisible] = useState(false)
+  const [intervalCurrentTime, setIntervalCurrentTime] = useState(0)
   const [isTimerRunning, setTimerRunning] = useState(false)
   const [isIntervalDone, setIntervalDone] = useState(false)
   const [slideDirection, setSlideDirection] = useState(SlideDirection.Left)
   const [lastStart, setLastStart] = useState(Date.now())
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
 
-  const exercise = exercises[exerciseId]
+  const exercise = exercises[exerciseIndex]
 
-  const maxIntervalTime =
+  const intervalDuration =
     intervalType === IntervalType.Prepare
-      ? exercise.prepareTime
-      : exercise.workTime
+      ? exercise.prepareDuration
+      : exercise.workDuration
 
-  let trainingTime = 0
-  let maxTrainingTime = 0
+  let trainingCurrentTime = 0
+  let trainingDuration = 0
 
   exercises.forEach((exercise, i) => {
-    const exerciseTime = exercise.prepareTime + exercise.workTime
-    if (i < exerciseId) {
-      trainingTime += exerciseTime
-    } else if (i === exerciseId) {
+    const exerciseTime = exercise.prepareDuration + exercise.workDuration
+    if (i < exerciseIndex) {
+      trainingCurrentTime += exerciseTime
+    } else if (i === exerciseIndex) {
       if (intervalType === IntervalType.Work) {
-        trainingTime += exercise.prepareTime
+        trainingCurrentTime += exercise.prepareDuration
       }
-      trainingTime += intervalTime
+      trainingCurrentTime += intervalCurrentTime
     }
-    maxTrainingTime += exerciseTime
+    trainingDuration += exerciseTime
   })
 
   useEffect(() => {
@@ -242,7 +199,7 @@ export default function Training() {
       return
     }
     const timer = setInterval(() => {
-      setIntervalTime((prevIntervalTime) => prevIntervalTime + 1)
+      setIntervalCurrentTime((prevIntervalTime) => prevIntervalTime + 1)
     }, 1000)
 
     return () => {
@@ -251,19 +208,19 @@ export default function Training() {
   }, [isTimerRunning])
 
   useEffect(() => {
-    if (intervalTime === maxIntervalTime) {
+    if (intervalCurrentTime === intervalDuration) {
       if (intervalType === IntervalType.Prepare) {
         setIntervalType(IntervalType.Work)
       } else {
-        if (exerciseId === exercises.length - 1) {
+        if (exerciseIndex === exercises.length - 1) {
           return history.goBack()
         }
-        setExerciseId(exerciseId + 1)
+        setExerciseIndex(exerciseIndex + 1)
         setIntervalType(IntervalType.Prepare)
       }
-      setIntervalTime(0)
+      setIntervalCurrentTime(0)
       setIntervalDone(false)
-    } else if (isTimerRunning && intervalTime === maxIntervalTime - 1) {
+    } else if (isTimerRunning && intervalCurrentTime === intervalDuration - 1) {
       const timer = setTimeout(() => {
         setIntervalDone(true)
       }, 650)
@@ -274,10 +231,10 @@ export default function Training() {
     }
   }, [
     history,
-    exerciseId,
+    exerciseIndex,
     intervalType,
-    intervalTime,
-    maxIntervalTime,
+    intervalCurrentTime,
+    intervalDuration,
     isTimerRunning,
   ])
 
@@ -292,7 +249,7 @@ export default function Training() {
   }, [])
 
   useEffect(() => {
-    const remainingTime = maxIntervalTime - intervalTime
+    const remainingTime = intervalDuration - intervalCurrentTime
     if (!audioContext || !isTimerRunning || remainingTime > 3) {
       return
     }
@@ -304,21 +261,20 @@ export default function Training() {
     oscillator.stop(
       audioContext.currentTime + (remainingTime === 0 ? 0.5 : 0.1)
     )
-  }, [intervalTime, maxIntervalTime, isTimerRunning, audioContext])
+  }, [intervalCurrentTime, intervalDuration, isTimerRunning, audioContext])
 
   return (
     <ButtonBase
       component="div"
-      className={clsx(classes.root, isControlsVisible && 'disabled')}
-      disableTouchRipple={isControlsVisible}
+      className={clsx(classes.root, !isTimerRunning && 'disabled')}
+      disableTouchRipple={!isTimerRunning}
       onClick={() => {
-        if (isControlsVisible) return
+        if (!isTimerRunning) return
         setTimerRunning(false)
-        setControlsVisible(true)
         setIntervalDone(false)
       }}
     >
-      <Fade in={isControlsVisible}>
+      <Fade in={!isTimerRunning}>
         <IconButton
           className={classes.backButton}
           color="inherit"
@@ -330,7 +286,9 @@ export default function Training() {
       <Typography
         className={clsx(
           classes.intervalTime,
-          isTimerRunning && maxIntervalTime - intervalTime <= 3 && 'countdown'
+          isTimerRunning &&
+            intervalDuration - intervalCurrentTime <= 3 &&
+            'countdown'
         )}
         variant="h1"
         color={
@@ -341,12 +299,12 @@ export default function Training() {
       >
         <SwitchTransition>
           <CSSTransition
-            key={`${lastStart}-${intervalTime}`}
+            key={`${lastStart}-${intervalCurrentTime}`}
             timeout={500}
             exit={false}
           >
             <span className={classes.intervalTimeSeconds}>
-              {maxIntervalTime - intervalTime}
+              {intervalDuration - intervalCurrentTime}
             </span>
           </CSSTransition>
         </SwitchTransition>
@@ -376,8 +334,11 @@ export default function Training() {
             value={
               isIntervalDone
                 ? 0
-                : (100 * (isTimerRunning ? intervalTime + 1 : intervalTime)) /
-                  maxIntervalTime
+                : (100 *
+                    (isTimerRunning
+                      ? intervalCurrentTime + 1
+                      : intervalCurrentTime)) /
+                  intervalDuration
             }
           />
         </div>
@@ -399,68 +360,43 @@ export default function Training() {
           </Grow>
         </div>
         <SwitchTransition>
-          <CSSTransition key={exerciseId} timeout={100} appear>
+          <CSSTransition key={exerciseIndex} timeout={100} appear>
             <span className={classes.exerciseName}>{exercise.name}</span>
           </CSSTransition>
         </SwitchTransition>
       </div>
-      <AppBar
-        className={clsx(classes.appBar, isControlsVisible && 'open')}
-        position="fixed"
-        color="inherit"
-      >
-        <LinearProgress
-          className={classes.trainingProgress}
-          variant="determinate"
-          value={(100 * trainingTime) / maxTrainingTime}
-        />
-        <Toolbar className={classes.controlBar}>
-          <IconButton
-            color="inherit"
-            disabled={
-              exerciseId === 0 &&
-              intervalType === IntervalType.Prepare &&
-              intervalTime === 0
-            }
-            onClick={() => {
-              if (intervalType === IntervalType.Prepare && intervalTime === 0) {
-                setExerciseId(exerciseId - 1)
-                setSlideDirection(SlideDirection.Right)
-              } else {
-                setIntervalType(IntervalType.Prepare)
-                setIntervalTime(0)
-              }
-            }}
-          >
-            <SkipPreviousIcon />
-          </IconButton>
-          <Fab
-            className={classes.playPauseButton}
-            onClick={() => {
-              if (!isTimerRunning) {
-                setControlsVisible(false)
-                setSlideDirection(SlideDirection.Left)
-                setLastStart(Date.now())
-              }
-              setTimerRunning(!isTimerRunning)
-            }}
-          >
-            {isTimerRunning ? <PauseIcon /> : <PlayArrowIcon />}
-          </Fab>
-          <IconButton
-            color="inherit"
-            disabled={exerciseId === exercises.length - 1}
-            onClick={() => {
-              setExerciseId(exerciseId + 1)
-              setIntervalType(IntervalType.Prepare)
-              setIntervalTime(0)
-              setSlideDirection(SlideDirection.Left)
-            }}
-          >
-            <SkipNextIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      <TimerControls
+        exerciseIndex={exerciseIndex}
+        exerciseCount={exercises.length}
+        trainingCurrentTime={trainingCurrentTime}
+        trainingDuration={trainingDuration}
+        isTimerRunning={isTimerRunning}
+        onPreviousClick={() => {
+          if (
+            intervalType === IntervalType.Prepare &&
+            intervalCurrentTime === 0
+          ) {
+            setExerciseIndex(exerciseIndex - 1)
+            setSlideDirection(SlideDirection.Right)
+          } else {
+            setIntervalType(IntervalType.Prepare)
+            setIntervalCurrentTime(0)
+          }
+        }}
+        onPlayClick={() => {
+          if (!isTimerRunning) {
+            setSlideDirection(SlideDirection.Left)
+            setLastStart(Date.now())
+          }
+          setTimerRunning(!isTimerRunning)
+        }}
+        onNextClick={() => {
+          setExerciseIndex(exerciseIndex + 1)
+          setIntervalType(IntervalType.Prepare)
+          setIntervalCurrentTime(0)
+          setSlideDirection(SlideDirection.Left)
+        }}
+      />
     </ButtonBase>
   )
 }
