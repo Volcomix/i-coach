@@ -13,7 +13,7 @@ import CSSTransition from 'react-transition-group/CSSTransition'
 import SwitchTransition from 'react-transition-group/SwitchTransition'
 import exercises from '../exercises'
 import { IntervalType } from '../types'
-import { TimerControls } from './TimerControls'
+import TimerControls from './TimerControls'
 
 enum SlideDirection {
   Left,

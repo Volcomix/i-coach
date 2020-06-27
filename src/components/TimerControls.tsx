@@ -47,11 +47,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export function TimerControls(props: Props) {
+export default function TimerControls(props: Props) {
   const classes = useStyles()
 
   return (
     <AppBar
+      role="toolbar"
       className={clsx(classes.root, !props.isTimerRunning && 'open')}
       position="fixed"
       color="inherit"
@@ -63,16 +64,32 @@ export function TimerControls(props: Props) {
       />
       <Toolbar className={classes.controls}>
         <IconButton
+          aria-label="previous"
           color="inherit"
           disabled={props.trainingCurrentTime === 0}
           onClick={props.onPreviousClick}
         >
           <SkipPreviousIcon />
         </IconButton>
-        <Fab className={classes.playButton} onClick={props.onPlayClick}>
-          {props.isTimerRunning ? <PauseIcon /> : <PlayArrowIcon />}
-        </Fab>
+        {props.isTimerRunning ? (
+          <Fab
+            aria-label="pause"
+            className={classes.playButton}
+            onClick={props.onPlayClick}
+          >
+            <PauseIcon />
+          </Fab>
+        ) : (
+          <Fab
+            aria-label="play"
+            className={classes.playButton}
+            onClick={props.onPlayClick}
+          >
+            <PlayArrowIcon />
+          </Fab>
+        )}
         <IconButton
+          aria-label="next"
           color="inherit"
           disabled={props.exerciseIndex === props.exerciseCount - 1}
           onClick={props.onNextClick}
@@ -84,7 +101,7 @@ export function TimerControls(props: Props) {
   )
 }
 
-interface Props {
+export interface Props {
   exerciseIndex: number
   exerciseCount: number
   trainingCurrentTime: number
