@@ -14,6 +14,7 @@ import SwitchTransition from 'react-transition-group/SwitchTransition'
 import exercises from '../exercises'
 import { IntervalType } from '../types'
 import TimerControls from './TimerControls'
+import TimerInterval from './TimerInterval'
 
 enum SlideDirection {
   Left,
@@ -131,7 +132,7 @@ export default function Training() {
   const history = useHistory()
 
   const [exerciseIndex, setExerciseIndex] = useState(0)
-  const [intervalType, setIntervalType] = useState(IntervalType.Prepare)
+  const [intervalType, setIntervalType] = useState<IntervalType>('prepare')
   const [intervalCurrentTime, setIntervalCurrentTime] = useState(0)
   const [isTimerRunning, setTimerRunning] = useState(false)
   const [isIntervalDone, setIntervalDone] = useState(false)
@@ -142,7 +143,7 @@ export default function Training() {
   const exercise = exercises[exerciseIndex]
 
   const intervalDuration =
-    intervalType === IntervalType.Prepare
+    intervalType === 'prepare'
       ? exercise.prepareDuration
       : exercise.workDuration
 
@@ -154,7 +155,7 @@ export default function Training() {
     if (i < exerciseIndex) {
       trainingCurrentTime += exerciseTime
     } else if (i === exerciseIndex) {
-      if (intervalType === IntervalType.Work) {
+      if (intervalType === 'work') {
         trainingCurrentTime += exercise.prepareDuration
       }
       trainingCurrentTime += intervalCurrentTime
@@ -209,14 +210,14 @@ export default function Training() {
 
   useEffect(() => {
     if (intervalCurrentTime === intervalDuration) {
-      if (intervalType === IntervalType.Prepare) {
-        setIntervalType(IntervalType.Work)
+      if (intervalType === 'prepare') {
+        setIntervalType('work')
       } else {
         if (exerciseIndex === exercises.length - 1) {
           return history.goBack()
         }
         setExerciseIndex(exerciseIndex + 1)
-        setIntervalType(IntervalType.Prepare)
+        setIntervalType('prepare')
       }
       setIntervalCurrentTime(0)
       setIntervalDone(false)
@@ -283,88 +284,90 @@ export default function Training() {
           <ArrowBackIcon />
         </IconButton>
       </Fade>
-      <Typography
-        className={clsx(
-          classes.intervalTime,
-          isTimerRunning &&
-            intervalDuration - intervalCurrentTime <= 3 &&
-            'countdown'
-        )}
-        variant="h1"
-        color={
-          intervalType === IntervalType.Prepare
-            ? 'textSecondary'
-            : 'textPrimary'
-        }
-      >
-        <SwitchTransition>
-          <CSSTransition
-            key={`${lastStart}-${intervalCurrentTime}`}
-            timeout={500}
-            exit={false}
-          >
-            <span className={classes.intervalTimeSeconds}>
-              {intervalDuration - intervalCurrentTime}
-            </span>
-          </CSSTransition>
-        </SwitchTransition>
-        <div className={classes.intervalProgress}>
-          <CircularProgress
-            className={classes.intervalProgressTrack}
-            variant="determinate"
-            color={
-              intervalType === IntervalType.Prepare ? 'inherit' : 'primary'
-            }
-            size="100%"
-            thickness={1.5}
-            value={100}
-          />
-          <CircularProgress
-            className={clsx(
-              classes.intervalProgressIndicator,
-              isTimerRunning && 'running',
-              isIntervalDone && 'done'
-            )}
-            variant="static"
-            color={
-              intervalType === IntervalType.Prepare ? 'inherit' : 'primary'
-            }
-            size="100%"
-            thickness={1.5}
-            value={
-              isIntervalDone
-                ? 0
-                : (100 *
-                    (isTimerRunning
-                      ? intervalCurrentTime + 1
-                      : intervalCurrentTime)) /
-                  intervalDuration
-            }
-          />
+      {false ? (
+        <TimerInterval
+          intervalType={intervalType}
+          intervalCurrentTime={intervalCurrentTime}
+          intervalDuration={intervalDuration}
+        />
+      ) : (
+        <Typography
+          className={clsx(
+            classes.intervalTime,
+            isTimerRunning &&
+              intervalDuration - intervalCurrentTime <= 3 &&
+              'countdown'
+          )}
+          variant="h1"
+          color={intervalType === 'prepare' ? 'textSecondary' : 'textPrimary'}
+        >
+          <SwitchTransition>
+            <CSSTransition
+              key={`${lastStart}-${intervalCurrentTime}`}
+              timeout={500}
+              exit={false}
+            >
+              <span className={classes.intervalTimeSeconds}>
+                {intervalDuration - intervalCurrentTime}
+              </span>
+            </CSSTransition>
+          </SwitchTransition>
+          <div className={classes.intervalProgress}>
+            <CircularProgress
+              className={classes.intervalProgressTrack}
+              variant="determinate"
+              color={intervalType === 'prepare' ? 'inherit' : 'primary'}
+              size="100%"
+              thickness={1.5}
+              value={100}
+            />
+            <CircularProgress
+              className={clsx(
+                classes.intervalProgressIndicator,
+                isTimerRunning && 'running',
+                isIntervalDone && 'done'
+              )}
+              variant="static"
+              color={intervalType === 'prepare' ? 'inherit' : 'primary'}
+              size="100%"
+              thickness={1.5}
+              value={
+                isIntervalDone
+                  ? 0
+                  : (100 *
+                      (isTimerRunning
+                        ? intervalCurrentTime + 1
+                        : intervalCurrentTime)) /
+                    intervalDuration
+              }
+            />
+          </div>
+        </Typography>
+      )}
+      {true && (
+        <div
+          className={classes.exercise}
+          style={
+            {
+              '--enter-translate-x':
+                slideDirection === SlideDirection.Left ? '200px' : '-200px',
+              '--exit-translate-x':
+                slideDirection === SlideDirection.Left ? '-200px' : '200px',
+            } as CSSProperties
+          }
+        >
+          <div className={classes.next}>
+            <Grow in={intervalType === 'prepare'}>
+              <div>Next</div>
+            </Grow>
+          </div>
+          <SwitchTransition>
+            <CSSTransition key={exerciseIndex} timeout={100} appear>
+              <span className={classes.exerciseName}>{exercise.name}</span>
+            </CSSTransition>
+          </SwitchTransition>
         </div>
-      </Typography>
-      <div
-        className={classes.exercise}
-        style={
-          {
-            '--enter-translate-x':
-              slideDirection === SlideDirection.Left ? '200px' : '-200px',
-            '--exit-translate-x':
-              slideDirection === SlideDirection.Left ? '-200px' : '200px',
-          } as CSSProperties
-        }
-      >
-        <div className={classes.next}>
-          <Grow in={intervalType === IntervalType.Prepare}>
-            <div>Next</div>
-          </Grow>
-        </div>
-        <SwitchTransition>
-          <CSSTransition key={exerciseIndex} timeout={100} appear>
-            <span className={classes.exerciseName}>{exercise.name}</span>
-          </CSSTransition>
-        </SwitchTransition>
-      </div>
+      )}
       <TimerControls
         exerciseIndex={exerciseIndex}
         exerciseCount={exercises.length}
@@ -372,14 +375,11 @@ export default function Training() {
         trainingDuration={trainingDuration}
         isTimerRunning={isTimerRunning}
         onPreviousClick={() => {
-          if (
-            intervalType === IntervalType.Prepare &&
-            intervalCurrentTime === 0
-          ) {
+          if (intervalType === 'prepare' && intervalCurrentTime === 0) {
             setExerciseIndex(exerciseIndex - 1)
             setSlideDirection(SlideDirection.Right)
           } else {
-            setIntervalType(IntervalType.Prepare)
+            setIntervalType('prepare')
             setIntervalCurrentTime(0)
           }
         }}
@@ -392,7 +392,7 @@ export default function Training() {
         }}
         onNextClick={() => {
           setExerciseIndex(exerciseIndex + 1)
-          setIntervalType(IntervalType.Prepare)
+          setIntervalType('prepare')
           setIntervalCurrentTime(0)
           setSlideDirection(SlideDirection.Left)
         }}

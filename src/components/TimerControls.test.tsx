@@ -18,14 +18,14 @@ function setup(props: Partial<Props>) {
   )
 }
 
-test('toolbar is open when timer is not running', () => {
+test('toolbar is expanded when timer is not running', () => {
   setup({ isTimerRunning: false })
-  expect(screen.getByRole('toolbar')).toHaveClass('open')
+  expect(screen.getByRole('toolbar')).toHaveAttribute('aria-expanded', 'true')
 })
 
-test('toolbar is not open when timer is running', () => {
+test('toolbar is not expanded when timer is running', () => {
   setup({ isTimerRunning: true })
-  expect(screen.getByRole('toolbar')).not.toHaveClass('open')
+  expect(screen.getByRole('toolbar')).toHaveAttribute('aria-expanded', 'false')
 })
 
 test('renders training progress', () => {
@@ -67,26 +67,26 @@ test('calls onPreviousClick on previous button click', () => {
   const onPreviousClick = jest.fn()
   setup({ onPreviousClick })
   fireEvent.click(screen.getByRole('button', { name: 'previous' }))
-  expect(onPreviousClick).toHaveBeenCalled()
+  expect(onPreviousClick).toHaveBeenCalledTimes(1)
 })
 
 test('calls onPlayClick on play button click', () => {
   const onPlayClick = jest.fn()
   setup({ onPlayClick })
   fireEvent.click(screen.getByRole('button', { name: 'play' }))
-  expect(onPlayClick).toHaveBeenCalled()
+  expect(onPlayClick).toHaveBeenCalledTimes(1)
 })
 
 test('calls onPlayClick on pause button click', () => {
   const onPlayClick = jest.fn()
   setup({ isTimerRunning: true, onPlayClick })
   fireEvent.click(screen.getByRole('button', { name: 'pause' }))
-  expect(onPlayClick).toHaveBeenCalled()
+  expect(onPlayClick).toHaveBeenCalledTimes(1)
 })
 
 test('calls onNextClick on next button click', () => {
   const onNextClick = jest.fn()
   setup({ onNextClick })
   fireEvent.click(screen.getByRole('button', { name: 'next' }))
-  expect(onNextClick).toHaveBeenCalled()
+  expect(onNextClick).toHaveBeenCalledTimes(1)
 })

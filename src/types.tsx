@@ -4,7 +4,4 @@ export interface Exercise {
   workDuration: number
 }
 
-export enum IntervalType {
-  Prepare,
-  Work,
-}
+export type IntervalType = 'prepare' | 'work'

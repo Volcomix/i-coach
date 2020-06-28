@@ -13,7 +13,6 @@ import PauseIcon from '@material-ui/icons/Pause'
 import PlayArrowIcon from '@material-ui/icons/PlayArrow'
 import SkipNextIcon from '@material-ui/icons/SkipNext'
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious'
-import clsx from 'clsx'
 import React from 'react'
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 'auto',
       bottom: -theme.spacing(9),
       transition: `bottom ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut}`,
-      '&.open': {
+      '&[aria-expanded="true"]': {
         bottom: 0,
       },
     },
@@ -53,7 +52,8 @@ export default function TimerControls(props: Props) {
   return (
     <AppBar
       role="toolbar"
-      className={clsx(classes.root, !props.isTimerRunning && 'open')}
+      aria-expanded={!props.isTimerRunning}
+      className={classes.root}
       position="fixed"
       color="inherit"
     >
