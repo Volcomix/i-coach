@@ -14,7 +14,7 @@ import SwitchTransition from 'react-transition-group/SwitchTransition'
 import exercises from '../exercises'
 import { IntervalType } from '../types'
 import TimerControls from './TimerControls'
-import TimerInterval from './TimerInterval'
+import TimerIntervalTime from './TimerIntervalTime'
 
 enum SlideDirection {
   Left,
@@ -137,7 +137,7 @@ export default function Training() {
   const [isTimerRunning, setTimerRunning] = useState(false)
   const [isIntervalDone, setIntervalDone] = useState(false)
   const [slideDirection, setSlideDirection] = useState(SlideDirection.Left)
-  const [lastStart, setLastStart] = useState(Date.now())
+  const [lastTimerStart, setLastTimerStart] = useState(Date.now())
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
 
   const exercise = exercises[exerciseIndex]
@@ -267,6 +267,7 @@ export default function Training() {
   return (
     <ButtonBase
       component="div"
+      aria-label="pause"
       className={clsx(classes.root, !isTimerRunning && 'disabled')}
       disableTouchRipple={!isTimerRunning}
       onClick={() => {
@@ -277,6 +278,7 @@ export default function Training() {
     >
       <Fade in={!isTimerRunning}>
         <IconButton
+          aria-label="back"
           className={classes.backButton}
           color="inherit"
           onClick={() => history.goBack()}
@@ -285,7 +287,7 @@ export default function Training() {
         </IconButton>
       </Fade>
       {false ? (
-        <TimerInterval
+        <TimerIntervalTime
           intervalType={intervalType}
           intervalCurrentTime={intervalCurrentTime}
           intervalDuration={intervalDuration}
@@ -303,7 +305,7 @@ export default function Training() {
         >
           <SwitchTransition>
             <CSSTransition
-              key={`${lastStart}-${intervalCurrentTime}`}
+              key={`${lastTimerStart}-${intervalCurrentTime}`}
               timeout={500}
               exit={false}
             >
@@ -386,7 +388,7 @@ export default function Training() {
         onPlayClick={() => {
           if (!isTimerRunning) {
             setSlideDirection(SlideDirection.Left)
-            setLastStart(Date.now())
+            setLastTimerStart(Date.now())
           }
           setTimerRunning(!isTimerRunning)
         }}
