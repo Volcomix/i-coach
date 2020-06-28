@@ -137,7 +137,7 @@ export default function Training() {
   const [isTimerRunning, setTimerRunning] = useState(false)
   const [isIntervalDone, setIntervalDone] = useState(false)
   const [slideDirection, setSlideDirection] = useState(SlideDirection.Left)
-  const [lastTimerStart, setLastTimerStart] = useState(Date.now())
+  const [timerLastStart, setTimerLastStart] = useState(Date.now())
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
 
   const exercise = exercises[exerciseIndex]
@@ -291,6 +291,7 @@ export default function Training() {
           intervalType={intervalType}
           intervalCurrentTime={intervalCurrentTime}
           intervalDuration={intervalDuration}
+          timerLastStart={timerLastStart}
         />
       ) : (
         <Typography
@@ -305,7 +306,7 @@ export default function Training() {
         >
           <SwitchTransition>
             <CSSTransition
-              key={`${lastTimerStart}-${intervalCurrentTime}`}
+              key={`${timerLastStart}-${intervalCurrentTime}`}
               timeout={500}
               exit={false}
             >
@@ -388,7 +389,7 @@ export default function Training() {
         onPlayClick={() => {
           if (!isTimerRunning) {
             setSlideDirection(SlideDirection.Left)
-            setLastTimerStart(Date.now())
+            setTimerLastStart(Date.now())
           }
           setTimerRunning(!isTimerRunning)
         }}

@@ -46,7 +46,7 @@ export default function TimerIntervalTime(props: Props) {
       aria-live={intervalRemainingTime <= 3 ? 'assertive' : 'off'}
       className={classes.root}
     >
-      <Typography key={props.intervalCurrentTime}>
+      <Typography key={`${props.timerLastStart}-${props.intervalCurrentTime}`}>
         {intervalRemainingTime}
       </Typography>
     </div>
@@ -57,4 +57,5 @@ export interface Props {
   intervalType: IntervalType
   intervalCurrentTime: number
   intervalDuration: number
+  timerLastStart: number
 }
