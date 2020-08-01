@@ -58,7 +58,7 @@ test('notifies when restarting timer', () => {
       timerLastStart={1}
     />
   )
-  const reminaingTimeAfterRestart = screen.getByText('3')
+  const remainingTimeAfterRestart = screen.getByText('3')
 
-  expect(reminaingTimeAfterRestart).not.toBe(remainingTimeBeforeRestart)
+  expect(remainingTimeAfterRestart).not.toBe(remainingTimeBeforeRestart)
 })

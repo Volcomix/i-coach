@@ -19,10 +19,11 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       top: 'auto',
-      bottom: -theme.spacing(9),
-      transition: `bottom ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut}`,
+      bottom: 0,
+      transform: `translateY(${theme.spacing(9)}px)`,
+      transition: `transform ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut}`,
       '&[aria-expanded="true"]': {
-        bottom: 0,
+        transform: 'none',
       },
     },
     trainingProgress: {

@@ -14,6 +14,7 @@ import SwitchTransition from 'react-transition-group/SwitchTransition'
 import exercises from '../exercises'
 import { IntervalType } from '../types'
 import TimerControls from './TimerControls'
+import TimerIntervalProgress from './TimerIntervalProgress'
 import TimerIntervalTime from './TimerIntervalTime'
 
 enum SlideDirection {
@@ -287,12 +288,15 @@ export default function Training() {
         </IconButton>
       </Fade>
       {false ? (
-        <TimerIntervalTime
-          intervalType={intervalType}
-          intervalCurrentTime={intervalCurrentTime}
-          intervalDuration={intervalDuration}
-          timerLastStart={timerLastStart}
-        />
+        <React.Fragment>
+          <TimerIntervalProgress intervalType={intervalType} />
+          <TimerIntervalTime
+            intervalType={intervalType}
+            intervalCurrentTime={intervalCurrentTime}
+            intervalDuration={intervalDuration}
+            timerLastStart={timerLastStart}
+          />
+        </React.Fragment>
       ) : (
         <Typography
           className={clsx(
