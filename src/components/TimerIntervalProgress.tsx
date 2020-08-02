@@ -20,10 +20,15 @@ export default function TimerIntervalProgress(props: Props) {
   const classes = useStyles()
 
   return (
-    <CircularProgress
-      className={classes.indicator}
-      aria-label={props.intervalType}
-    />
+    <React.Fragment>
+      <CircularProgress role="presentation" className={props.intervalType} />
+      <CircularProgress
+        className={classes.indicator}
+        aria-label={props.intervalType}
+        variant="static"
+        value={50}
+      />
+    </React.Fragment>
   )
 }
 
