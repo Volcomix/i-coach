@@ -257,11 +257,11 @@ export default function Training() {
     }
     const oscillator = audioContext.createOscillator()
     oscillator.type = 'triangle'
-    oscillator.frequency.value = remainingTime === 0 ? 880 : 440
+    oscillator.frequency.value = remainingTime === 0 ? 880 : 523.2511
     oscillator.connect(audioContext.destination)
     oscillator.start()
     oscillator.stop(
-      audioContext.currentTime + (remainingTime === 0 ? 0.5 : 0.1)
+      audioContext.currentTime + (remainingTime === 0 ? 0.5 : 0.3)
     )
   }, [intervalCurrentTime, intervalDuration, isTimerRunning, audioContext])
 
