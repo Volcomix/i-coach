@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/i-coach/static/js/main.11e4e39c.chunk.js",
-    "main.js.map": "/i-coach/static/js/main.11e4e39c.chunk.js.map",
+    "main.js": "/i-coach/static/js/main.f63e9f29.chunk.js",
+    "main.js.map": "/i-coach/static/js/main.f63e9f29.chunk.js.map",
     "runtime-main.js": "/i-coach/static/js/runtime-main.16280164.js",
     "runtime-main.js.map": "/i-coach/static/js/runtime-main.16280164.js.map",
     "static/js/2.c3e1b269.chunk.js": "/i-coach/static/js/2.c3e1b269.chunk.js",
     "static/js/2.c3e1b269.chunk.js.map": "/i-coach/static/js/2.c3e1b269.chunk.js.map",
     "index.html": "/i-coach/index.html",
-    "precache-manifest.390e9646685a7db107a39d4dd6abaeae.js": "/i-coach/precache-manifest.390e9646685a7db107a39d4dd6abaeae.js",
+    "precache-manifest.6243616b824074c53d24951120136f8d.js": "/i-coach/precache-manifest.6243616b824074c53d24951120136f8d.js",
     "service-worker.js": "/i-coach/service-worker.js",
     "static/js/2.c3e1b269.chunk.js.LICENSE.txt": "/i-coach/static/js/2.c3e1b269.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.16280164.js",
     "static/js/2.c3e1b269.chunk.js",
-    "static/js/main.11e4e39c.chunk.js"
+    "static/js/main.f63e9f29.chunk.js"
   ]
 }
