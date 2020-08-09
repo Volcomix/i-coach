@@ -6,14 +6,16 @@ import { IntervalType } from '../types'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      '& [aria-label="prepare"], & .prepare': {
+    progress: {
+      position: 'absolute',
+      '&[aria-label="prepare"], &.prepare': {
         color: theme.palette.text.secondary,
       },
     },
     track: {
       opacity: 0.1,
     },
+    // TODO Animate progress indicator
   })
 )
 
@@ -21,22 +23,29 @@ export default function TimerIntervalProgress(props: Props) {
   const classes = useStyles()
 
   return (
-    <div className={classes.root}>
+    <React.Fragment>
       <CircularProgress
         role="presentation"
-        className={clsx(classes.track, props.intervalType)}
+        className={clsx(classes.progress, classes.track, props.intervalType)}
         variant="determinate"
         value={100}
       />
       <CircularProgress
         aria-label={props.intervalType}
+        className={classes.progress}
         variant="static"
-        value={50}
+        value={
+          ((props.intervalCurrentTime + (props.isTimerRunning ? 1 : 0)) * 100) /
+          props.intervalDuration
+        }
       />
-    </div>
+    </React.Fragment>
   )
 }
 
 export interface Props {
   intervalType: IntervalType
+  intervalCurrentTime: number
+  intervalDuration: number
+  isTimerRunning: boolean
 }

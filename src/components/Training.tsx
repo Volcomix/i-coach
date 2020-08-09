@@ -289,7 +289,12 @@ export default function Training() {
       </Fade>
       {false ? (
         <React.Fragment>
-          <TimerIntervalProgress intervalType={intervalType} />
+          <TimerIntervalProgress
+            intervalType={intervalType}
+            intervalCurrentTime={intervalCurrentTime}
+            intervalDuration={intervalDuration}
+            isTimerRunning={isTimerRunning}
+          />
           <TimerIntervalTime
             intervalType={intervalType}
             intervalCurrentTime={intervalCurrentTime}
