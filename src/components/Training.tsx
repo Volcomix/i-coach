@@ -303,82 +303,82 @@ export default function Training() {
           />
         </React.Fragment>
       ) : (
-        <Typography
-          className={clsx(
-            classes.intervalTime,
-            isTimerRunning &&
-              intervalDuration - intervalCurrentTime <= 3 &&
-              'countdown'
-          )}
-          variant="h1"
-          color={intervalType === 'prepare' ? 'textSecondary' : 'textPrimary'}
-        >
-          <SwitchTransition>
-            <CSSTransition
-              key={`${timerLastStart}-${intervalCurrentTime}`}
-              timeout={500}
-              exit={false}
-            >
-              <span className={classes.intervalTimeSeconds}>
-                {intervalDuration - intervalCurrentTime}
-              </span>
-            </CSSTransition>
-          </SwitchTransition>
-          <div className={classes.intervalProgress}>
-            <CircularProgress
-              className={classes.intervalProgressTrack}
-              variant="determinate"
-              color={intervalType === 'prepare' ? 'inherit' : 'primary'}
-              size="100%"
-              thickness={1.5}
-              value={100}
-            />
-            <CircularProgress
-              className={clsx(
-                classes.intervalProgressIndicator,
-                isTimerRunning && 'running',
-                isIntervalDone && 'done'
-              )}
-              variant="static"
-              color={intervalType === 'prepare' ? 'inherit' : 'primary'}
-              size="100%"
-              thickness={1.5}
-              value={
-                isIntervalDone
-                  ? 0
-                  : (100 *
-                      (isTimerRunning
-                        ? intervalCurrentTime + 1
-                        : intervalCurrentTime)) /
-                    intervalDuration
-              }
-            />
+        <React.Fragment>
+          <Typography
+            className={clsx(
+              classes.intervalTime,
+              isTimerRunning &&
+                intervalDuration - intervalCurrentTime <= 3 &&
+                'countdown'
+            )}
+            variant="h1"
+            color={intervalType === 'prepare' ? 'textSecondary' : 'textPrimary'}
+          >
+            <SwitchTransition>
+              <CSSTransition
+                key={`${timerLastStart}-${intervalCurrentTime}`}
+                timeout={500}
+                exit={false}
+              >
+                <span className={classes.intervalTimeSeconds}>
+                  {intervalDuration - intervalCurrentTime}
+                </span>
+              </CSSTransition>
+            </SwitchTransition>
+            <div className={classes.intervalProgress}>
+              <CircularProgress
+                className={classes.intervalProgressTrack}
+                variant="determinate"
+                color={intervalType === 'prepare' ? 'inherit' : 'primary'}
+                size="100%"
+                thickness={1.5}
+                value={100}
+              />
+              <CircularProgress
+                className={clsx(
+                  classes.intervalProgressIndicator,
+                  isTimerRunning && 'running',
+                  isIntervalDone && 'done'
+                )}
+                variant="static"
+                color={intervalType === 'prepare' ? 'inherit' : 'primary'}
+                size="100%"
+                thickness={1.5}
+                value={
+                  isIntervalDone
+                    ? 0
+                    : (100 *
+                        (isTimerRunning
+                          ? intervalCurrentTime + 1
+                          : intervalCurrentTime)) /
+                      intervalDuration
+                }
+              />
+            </div>
+          </Typography>
+          <div
+            className={classes.exercise}
+            style={
+              {
+                '--enter-translate-x':
+                  slideDirection === SlideDirection.Left ? '200px' : '-200px',
+                '--exit-translate-x':
+                  slideDirection === SlideDirection.Left ? '-200px' : '200px',
+              } as CSSProperties
+            }
+          >
+            <div className={classes.next}>
+              <Grow in={intervalType === 'prepare'}>
+                <div>Next</div>
+              </Grow>
+            </div>
+            <SwitchTransition>
+              <CSSTransition key={exerciseIndex} timeout={100} appear>
+                <span className={classes.exerciseName}>{exercise.name}</span>
+              </CSSTransition>
+            </SwitchTransition>
           </div>
-        </Typography>
-      )}
-      {true && (
-        <div
-          className={classes.exercise}
-          style={
-            {
-              '--enter-translate-x':
-                slideDirection === SlideDirection.Left ? '200px' : '-200px',
-              '--exit-translate-x':
-                slideDirection === SlideDirection.Left ? '-200px' : '200px',
-            } as CSSProperties
-          }
-        >
-          <div className={classes.next}>
-            <Grow in={intervalType === 'prepare'}>
-              <div>Next</div>
-            </Grow>
-          </div>
-          <SwitchTransition>
-            <CSSTransition key={exerciseIndex} timeout={100} appear>
-              <span className={classes.exerciseName}>{exercise.name}</span>
-            </CSSTransition>
-          </SwitchTransition>
-        </div>
+        </React.Fragment>
       )}
       <TimerControls
         exerciseIndex={exerciseIndex}

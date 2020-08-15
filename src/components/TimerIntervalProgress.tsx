@@ -15,12 +15,20 @@ const useStyles = makeStyles((theme: Theme) =>
     track: {
       opacity: 0.1,
     },
-    // TODO Animate progress indicator
+    indicator: {
+      '&.running .MuiCircularProgress-circle': {
+        transitionDuration: '1s',
+        transitionTimingFunction: 'linear',
+      },
+    },
   })
 )
 
 export default function TimerIntervalProgress(props: Props) {
   const classes = useStyles()
+
+  const animatedIntervalCurrentTime =
+    props.intervalCurrentTime + (props.isTimerRunning ? 1 : 0)
 
   return (
     <React.Fragment>
@@ -32,12 +40,11 @@ export default function TimerIntervalProgress(props: Props) {
       />
       <CircularProgress
         aria-label={props.intervalType}
-        className={classes.progress}
+        className={clsx(classes.progress, classes.indicator, {
+          running: props.isTimerRunning,
+        })}
         variant="static"
-        value={
-          ((props.intervalCurrentTime + (props.isTimerRunning ? 1 : 0)) * 100) /
-          props.intervalDuration
-        }
+        value={(animatedIntervalCurrentTime * 100) / props.intervalDuration}
       />
     </React.Fragment>
   )
