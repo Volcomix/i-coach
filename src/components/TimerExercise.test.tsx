@@ -3,7 +3,13 @@ import React from 'react'
 import TimerExercise, { Props } from './TimerExercise'
 
 function setup(props: Partial<Props>) {
-  return render(<TimerExercise intervalType="prepare" {...props} />)
+  return render(
+    <TimerExercise
+      intervalType="prepare"
+      exerciseName="Do nothing"
+      {...props}
+    />
+  )
 }
 
 test('renders "Next" when preparing', () => {
@@ -14,4 +20,9 @@ test('renders "Next" when preparing', () => {
 test('does not render "Next" when working', () => {
   setup({ intervalType: 'work' })
   expect(screen.getByText('Next')).not.toBeVisible()
+})
+
+test('renders exercise name', () => {
+  setup({ exerciseName: 'Do something' })
+  expect(screen.getByText('Do something')).toBeInTheDocument()
 })
