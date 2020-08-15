@@ -6,6 +6,12 @@ import { IntervalType } from '../types'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
       fontWeight: 500,
       transition: `color ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeOut}`,
 

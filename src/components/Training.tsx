@@ -14,6 +14,7 @@ import SwitchTransition from 'react-transition-group/SwitchTransition'
 import exercises from '../exercises'
 import { IntervalType } from '../types'
 import TimerControls from './TimerControls'
+import TimerExercise from './TimerExercise'
 import TimerIntervalProgress from './TimerIntervalProgress'
 import TimerIntervalTime from './TimerIntervalTime'
 
@@ -39,6 +40,10 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'absolute',
       top: theme.spacing(1),
       left: theme.spacing(1),
+    },
+    interval: {
+      position: 'relative',
+      display: 'flex',
     },
     intervalTime: {
       marginTop: -theme.spacing(12),
@@ -287,20 +292,23 @@ export default function Training() {
           <ArrowBackIcon />
         </IconButton>
       </Fade>
-      {false ? (
+      {process.env.NODE_ENV === 'development' ? (
         <React.Fragment>
-          <TimerIntervalProgress
-            intervalType={intervalType}
-            intervalCurrentTime={intervalCurrentTime}
-            intervalDuration={intervalDuration}
-            isTimerRunning={isTimerRunning}
-          />
-          <TimerIntervalTime
-            intervalType={intervalType}
-            intervalCurrentTime={intervalCurrentTime}
-            intervalDuration={intervalDuration}
-            timerLastStart={timerLastStart}
-          />
+          <div className={classes.interval}>
+            <TimerIntervalProgress
+              intervalType={intervalType}
+              intervalCurrentTime={intervalCurrentTime}
+              intervalDuration={intervalDuration}
+              isTimerRunning={isTimerRunning}
+            />
+            <TimerIntervalTime
+              intervalType={intervalType}
+              intervalCurrentTime={intervalCurrentTime}
+              intervalDuration={intervalDuration}
+              timerLastStart={timerLastStart}
+            />
+          </div>
+          <TimerExercise />
         </React.Fragment>
       ) : (
         <React.Fragment>

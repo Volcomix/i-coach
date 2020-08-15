@@ -7,7 +7,6 @@ import { IntervalType } from '../types'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     progress: {
-      position: 'absolute',
       transition: `color ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeOut}`,
 
       '&[aria-label="prepare"], &.prepare': {
@@ -18,6 +17,8 @@ const useStyles = makeStyles((theme: Theme) =>
       opacity: 0.1,
     },
     indicator: {
+      position: 'absolute',
+
       '&.running .MuiCircularProgress-circle': {
         transitionDuration: '1s',
         transitionTimingFunction: 'linear',
