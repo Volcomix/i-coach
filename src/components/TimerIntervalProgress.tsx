@@ -8,10 +8,11 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     progress: {
       position: 'absolute',
+      transition: `color ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeOut}`,
+
       '&[aria-label="prepare"], &.prepare': {
         color: theme.palette.text.secondary,
       },
-      transition: `color ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeOut}`,
     },
     track: {
       opacity: 0.1,

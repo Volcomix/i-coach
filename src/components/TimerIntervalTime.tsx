@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       fontWeight: 500,
       transition: `color ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeOut}`,
+
       '&[aria-label="prepare"]': {
         color: theme.palette.text.secondary,
       },

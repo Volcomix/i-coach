@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
       bottom: 0,
       transform: `translateY(${theme.spacing(9)}px)`,
       transition: `transform ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeInOut}`,
+
       '&[aria-expanded="true"]': {
         transform: 'none',
       },
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.text.primary,
       color: theme.palette.background.paper,
       boxShadow: theme.shadows[0],
+
       '&:hover': {
         backgroundColor: lighten(
           theme.palette.text.primary,
