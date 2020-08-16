@@ -310,6 +310,7 @@ export default function Training() {
           </div>
           <TimerExercise
             intervalType={intervalType}
+            exerciseIndex={exerciseIndex}
             exerciseName={exercise.name}
           />
         </React.Fragment>
