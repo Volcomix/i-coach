@@ -1,27 +1,17 @@
 import ButtonBase from '@material-ui/core/ButtonBase'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Fade from '@material-ui/core/Fade'
-import Grow from '@material-ui/core/Grow'
 import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import clsx from 'clsx'
-import React, { CSSProperties, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import CSSTransition from 'react-transition-group/CSSTransition'
-import SwitchTransition from 'react-transition-group/SwitchTransition'
 import exercises from '../exercises'
 import { IntervalType } from '../types'
 import TimerControls from './TimerControls'
 import TimerExercise from './TimerExercise'
 import TimerIntervalProgress from './TimerIntervalProgress'
 import TimerIntervalTime from './TimerIntervalTime'
-
-enum SlideDirection {
-  Left,
-  Right,
-}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,91 +49,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       width: 'calc(var(--interval-size))',
     },
-    intervalTime: {
-      marginTop: -theme.spacing(12),
-      width: 'min(100vw, 70vh)',
-      height: 'min(100vw, 70vh)',
-      position: 'relative',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontSize: 'calc(0.4 * min(100vw, 70vh))',
-      fontWeight: 500,
-      transitionProperty: 'color',
-      transitionDuration: `${theme.transitions.duration.short}ms`,
-      transitionTimingFunction: theme.transitions.easing.easeOut,
-      '& .MuiCircularProgress-svg': {
-        transitionProperty: 'color',
-        transitionDuration: `${theme.transitions.duration.short}ms`,
-        transitionTimingFunction: theme.transitions.easing.easeOut,
-      },
-    },
-    intervalTimeSeconds: {
-      transition: `transform ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeOut}`,
-      '.countdown &.enter': {
-        transform: 'scale(1)',
-      },
-      '.countdown &.enter-active': {
-        transform: 'scale(1.001)',
-        transition: 'transform 500ms cubic-bezier(0, 0, 0.5, 250)',
-      },
-    },
-    intervalProgress: {
-      position: 'absolute',
-      top: theme.spacing(3),
-      right: theme.spacing(3),
-      bottom: theme.spacing(3),
-      left: theme.spacing(3),
-    },
-    intervalProgressTrack: {
-      position: 'absolute',
-      opacity: 0.1,
-    },
-    intervalProgressIndicator: {
-      '&.running .MuiCircularProgress-circle': {
-        transitionDuration: '1s',
-        transitionTimingFunction: 'linear',
-      },
-      '&.running.done .MuiCircularProgress-circle': {
-        transitionDuration: '300ms',
-        transitionTimingFunction: theme.transitions.easing.easeInOut,
-      },
-    },
-    exercise: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexDirection: 'column',
-      textAlign: 'center',
-    },
-    next: {
-      ...theme.typography.h4,
-      height: `calc(${theme.typography.h4.lineHeight} * ${theme.typography.h4.fontSize})`,
-      color: theme.palette.text.secondary,
-    },
-    exerciseName: {
-      ...theme.typography.h3,
-      height: `calc(${theme.typography.h3.lineHeight} * ${theme.typography.h3.fontSize})`,
-      fontWeight: 500,
-      '&.appear, &.enter': {
-        opacity: 0,
-        transform: 'translateX(var(--enter-translate-x))',
-      },
-      '&.appear-active, &.enter-active': {
-        opacity: 1,
-        transform: 'none',
-        transition: `opacity 100ms linear, transform 100ms ${theme.transitions.easing.easeOut}`,
-      },
-      '&.exit': {
-        opacity: 1,
-        transform: 'none',
-      },
-      '&.exit-active': {
-        opacity: 0,
-        transform: 'translateX(var(--exit-translate-x))',
-        transition: `opacity 100ms linear, transform 100ms ${theme.transitions.easing.easeIn}`,
-      },
-    },
   })
 )
 
@@ -155,8 +60,6 @@ export default function Timer() {
   const [intervalType, setIntervalType] = useState<IntervalType>('prepare')
   const [intervalCurrentTime, setIntervalCurrentTime] = useState(0)
   const [isTimerRunning, setTimerRunning] = useState(false)
-  const [isIntervalDone, setIntervalDone] = useState(false)
-  const [slideDirection, setSlideDirection] = useState(SlideDirection.Left)
   const [timerLastStart, setTimerLastStart] = useState(Date.now())
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
 
@@ -240,15 +143,6 @@ export default function Timer() {
         setIntervalType('prepare')
       }
       setIntervalCurrentTime(0)
-      setIntervalDone(false)
-    } else if (isTimerRunning && intervalCurrentTime === intervalDuration - 1) {
-      const timer = setTimeout(() => {
-        setIntervalDone(true)
-      }, 650)
-
-      return () => {
-        clearTimeout(timer)
-      }
     }
   }, [
     history,
@@ -256,7 +150,6 @@ export default function Timer() {
     intervalType,
     intervalCurrentTime,
     intervalDuration,
-    isTimerRunning,
   ])
 
   useEffect(() => {
@@ -293,7 +186,6 @@ export default function Timer() {
       onClick={() => {
         if (!isTimerRunning) return
         setTimerRunning(false)
-        setIntervalDone(false)
       }}
     >
       <Fade in={!isTimerRunning}>
@@ -306,106 +198,25 @@ export default function Timer() {
           <ArrowBackIcon />
         </IconButton>
       </Fade>
-      {true || process.env.NODE_ENV === 'development' ? (
-        <React.Fragment>
-          <div className={classes.interval}>
-            <TimerIntervalProgress
-              intervalType={intervalType}
-              intervalCurrentTime={intervalCurrentTime}
-              intervalDuration={intervalDuration}
-              isTimerRunning={isTimerRunning}
-            />
-            <TimerIntervalTime
-              intervalType={intervalType}
-              intervalCurrentTime={intervalCurrentTime}
-              intervalDuration={intervalDuration}
-              timerLastStart={timerLastStart}
-            />
-          </div>
-          <TimerExercise
-            intervalType={intervalType}
-            exerciseIndex={exerciseIndex}
-            exerciseName={exercise.name}
-          />
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <Typography
-            className={clsx(
-              classes.intervalTime,
-              isTimerRunning &&
-                intervalDuration - intervalCurrentTime <= 3 &&
-                'countdown'
-            )}
-            variant="h1"
-            color={intervalType === 'prepare' ? 'textSecondary' : 'textPrimary'}
-          >
-            <SwitchTransition>
-              <CSSTransition
-                key={`${timerLastStart}-${intervalCurrentTime}`}
-                timeout={500}
-                exit={false}
-              >
-                <span className={classes.intervalTimeSeconds}>
-                  {intervalDuration - intervalCurrentTime}
-                </span>
-              </CSSTransition>
-            </SwitchTransition>
-            <div className={classes.intervalProgress}>
-              <CircularProgress
-                className={classes.intervalProgressTrack}
-                variant="determinate"
-                color={intervalType === 'prepare' ? 'inherit' : 'primary'}
-                size="100%"
-                thickness={1.5}
-                value={100}
-              />
-              <CircularProgress
-                className={clsx(
-                  classes.intervalProgressIndicator,
-                  isTimerRunning && 'running',
-                  isIntervalDone && 'done'
-                )}
-                variant="static"
-                color={intervalType === 'prepare' ? 'inherit' : 'primary'}
-                size="100%"
-                thickness={1.5}
-                value={
-                  isIntervalDone
-                    ? 0
-                    : (100 *
-                        (isTimerRunning
-                          ? intervalCurrentTime + 1
-                          : intervalCurrentTime)) /
-                      intervalDuration
-                }
-              />
-            </div>
-          </Typography>
-          <div
-            className={classes.exercise}
-            style={
-              {
-                '--enter-translate-x':
-                  slideDirection === SlideDirection.Left ? '200px' : '-200px',
-                '--exit-translate-x':
-                  slideDirection === SlideDirection.Left ? '-200px' : '200px',
-              } as CSSProperties
-            }
-          >
-            <div className={classes.next}>
-              <Grow in={intervalType === 'prepare'}>
-                <div>Next</div>
-              </Grow>
-            </div>
-            <SwitchTransition>
-              <CSSTransition key={exerciseIndex} timeout={100} appear>
-                <span className={classes.exerciseName}>{exercise.name}</span>
-              </CSSTransition>
-            </SwitchTransition>
-          </div>
-        </React.Fragment>
-      )}
+      <div className={classes.interval}>
+        <TimerIntervalProgress
+          intervalType={intervalType}
+          intervalCurrentTime={intervalCurrentTime}
+          intervalDuration={intervalDuration}
+          isTimerRunning={isTimerRunning}
+        />
+        <TimerIntervalTime
+          intervalType={intervalType}
+          intervalCurrentTime={intervalCurrentTime}
+          intervalDuration={intervalDuration}
+          timerLastStart={timerLastStart}
+        />
+      </div>
+      <TimerExercise
+        intervalType={intervalType}
+        exerciseIndex={exerciseIndex}
+        exerciseName={exercise.name}
+      />
       <TimerControls
         exerciseIndex={exerciseIndex}
         exerciseCount={exercises.length}
@@ -415,7 +226,6 @@ export default function Timer() {
         onPreviousClick={() => {
           if (intervalType === 'prepare' && intervalCurrentTime === 0) {
             setExerciseIndex(exerciseIndex - 1)
-            setSlideDirection(SlideDirection.Right)
           } else {
             setIntervalType('prepare')
             setIntervalCurrentTime(0)
@@ -423,7 +233,6 @@ export default function Timer() {
         }}
         onPlayClick={() => {
           if (!isTimerRunning) {
-            setSlideDirection(SlideDirection.Left)
             setTimerLastStart(Date.now())
           }
           setTimerRunning(!isTimerRunning)
@@ -432,7 +241,6 @@ export default function Timer() {
           setExerciseIndex(exerciseIndex + 1)
           setIntervalType('prepare')
           setIntervalCurrentTime(0)
-          setSlideDirection(SlideDirection.Left)
         }}
       />
     </ButtonBase>
