@@ -8,8 +8,14 @@ import useIntervalEnding from './useIntervalEnding'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     progress: {
+      width: '100% !important',
+      height: 'auto !important',
+      padding: theme.spacing(2),
       transition: `color ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeOut}`,
 
+      '& .MuiCircularProgress-circle': {
+        strokeWidth: 1.5,
+      },
       '&[aria-label="prepare"], &.prepare': {
         color: theme.palette.text.secondary,
       },

@@ -29,21 +29,35 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: 'flex-end',
+      paddingBottom: theme.spacing(11),
+      overflowX: 'hidden',
+      '--interval-size': `min(100vw, 100vh - ${
+        theme.typography.h4.lineHeight
+      } * ${
+        theme.typography.h4.fontSize
+      } - var(--exercise-name-height) - ${theme.spacing(11)}px)`,
+
+      [theme.breakpoints.down('xs')]: {
+        '--exercise-name-height': `2 * ${theme.typography.h3.lineHeight} * ${theme.typography.h3.fontSize}`,
+      },
+      [theme.breakpoints.up('sm')]: {
+        '--exercise-name-height': `${theme.typography.h3.lineHeight} * ${theme.typography.h3.fontSize}`,
+      },
       '&.disabled': {
         cursor: 'auto',
       },
-      overflowX: 'hidden',
     },
     backButton: {
       position: 'absolute',
       top: theme.spacing(1),
       left: theme.spacing(1),
+      zIndex: theme.zIndex.drawer,
     },
     interval: {
       position: 'relative',
       display: 'flex',
+      width: 'calc(var(--interval-size))',
     },
     intervalTime: {
       marginTop: -theme.spacing(12),
@@ -292,7 +306,7 @@ export default function Timer() {
           <ArrowBackIcon />
         </IconButton>
       </Fade>
-      {process.env.NODE_ENV === 'development' ? (
+      {true || process.env.NODE_ENV === 'development' ? (
         <React.Fragment>
           <div className={classes.interval}>
             <TimerIntervalProgress

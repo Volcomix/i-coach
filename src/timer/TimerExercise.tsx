@@ -10,9 +10,11 @@ import useSlideDirection from './useSlideDirection'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
       display: 'flex',
       flexDirection: 'column',
-      alignItems: 'center',
+      textAlign: 'center',
 
       '&.slide-left': {
         '--exit-translate-x': '-200px',
@@ -24,10 +26,13 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     next: {
+      ...theme.typography.h4,
       color: theme.palette.text.secondary,
     },
     exerciseName: {
+      ...theme.typography.h3,
       fontWeight: 500,
+      height: `calc(var(--exercise-name-height))`,
 
       '&.appear, &.enter': {
         opacity: 0,

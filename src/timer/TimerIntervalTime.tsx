@@ -1,5 +1,4 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
 import React from 'react'
 import { IntervalType } from '../types'
 
@@ -12,7 +11,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      fontWeight: 500,
       transition: `color ${theme.transitions.duration.short}ms ${theme.transitions.easing.easeOut}`,
 
       '&[aria-label="prepare"]': {
@@ -36,6 +34,11 @@ const useStyles = makeStyles((theme: Theme) =>
         transform: 'scale(1)',
       },
     },
+    time: {
+      ...theme.typography.h1,
+      fontSize: 'calc(0.4 * var(--interval-size))',
+      fontWeight: 500,
+    },
   })
 )
 
@@ -52,9 +55,12 @@ export default function TimerIntervalTime(props: Props) {
       aria-live={intervalRemainingTime <= 3 ? 'assertive' : 'off'}
       className={classes.root}
     >
-      <Typography key={`${props.timerLastStart}-${props.intervalCurrentTime}`}>
+      <span
+        key={`${props.timerLastStart}-${props.intervalCurrentTime}`}
+        className={classes.time}
+      >
         {intervalRemainingTime}
-      </Typography>
+      </span>
     </div>
   )
 }
