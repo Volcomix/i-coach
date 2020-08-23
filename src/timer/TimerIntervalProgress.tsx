@@ -1,8 +1,9 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { IntervalType } from '../types'
+import useIntervalEnding from './useIntervalEnding'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,30 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 )
-
-function useIntervalEnding(
-  isTimerRunning: boolean,
-  intervalCurrentTime: number,
-  intervalDuration: number
-) {
-  const [isIntervalEnding, setIntervalEnding] = useState(false)
-
-  useEffect(() => {
-    if (isTimerRunning && intervalCurrentTime === intervalDuration - 1) {
-      const timer = setTimeout(() => {
-        setIntervalEnding(true)
-      }, 650)
-
-      return () => {
-        clearTimeout(timer)
-      }
-    } else {
-      setIntervalEnding(false)
-    }
-  }, [intervalCurrentTime, intervalDuration, isTimerRunning])
-
-  return isIntervalEnding
-}
 
 export default function TimerIntervalProgress(props: Props) {
   const classes = useStyles()

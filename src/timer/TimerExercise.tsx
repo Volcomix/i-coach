@@ -1,10 +1,11 @@
 import Grow from '@material-ui/core/Grow'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import CSSTransition from 'react-transition-group/CSSTransition'
 import SwitchTransition from 'react-transition-group/SwitchTransition'
 import { IntervalType } from '../types'
+import useSlideDirection from './useSlideDirection'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,22 +50,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 )
-
-function useSlideDirection(exerciseIndex: number) {
-  const previousExerciseIndexRef = useRef(-1)
-  const previousSlideDirectionRef = useRef<'left' | 'right'>('left')
-
-  useEffect(() => {
-    previousExerciseIndexRef.current = exerciseIndex
-  }, [exerciseIndex])
-
-  if (exerciseIndex > previousExerciseIndexRef.current) {
-    previousSlideDirectionRef.current = 'left'
-  } else if (exerciseIndex < previousExerciseIndexRef.current) {
-    previousSlideDirectionRef.current = 'right'
-  }
-  return previousSlideDirectionRef.current
-}
 
 export default function TimerExercise(props: Props) {
   const classes = useStyles()

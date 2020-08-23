@@ -1,7 +1,6 @@
 import React, { useReducer } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Home from './components/Home'
-import Training from './components/Training'
 import Exercises from './containers/Exercises'
 import TrainingLegacy from './containers/Training'
 import brokenStick from './exercises/broken-stick'
@@ -24,6 +23,7 @@ import {
   IntervalsState,
 } from './reducers'
 import itemsReducer, { ItemsReducer } from './reducers/items'
+import Training from './timer/Training'
 
 const initialIntervals: IntervalsState = {
   byId: {
