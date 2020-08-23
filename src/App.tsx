@@ -23,7 +23,7 @@ import {
   IntervalsState,
 } from './reducers'
 import itemsReducer, { ItemsReducer } from './reducers/items'
-import Training from './timer/Training'
+import Timer from './timer/Timer'
 
 const initialIntervals: IntervalsState = {
   byId: {
@@ -113,7 +113,7 @@ export default function App() {
           <Home />
         </Route>
         <Route exact path="/training">
-          <Training />
+          <Timer />
         </Route>
         <Route exact path="/training/legacy">
           <IntervalsDispatch.Provider value={intervalsDispatch}>

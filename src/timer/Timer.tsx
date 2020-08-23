@@ -133,7 +133,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export default function Training() {
+export default function Timer() {
   const classes = useStyles()
   const history = useHistory()
 
